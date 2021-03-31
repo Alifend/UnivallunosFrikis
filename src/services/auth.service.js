@@ -5,19 +5,21 @@ const API_URL = 'https://khor.pythonanywhere.com/api/';
 class AuthService {
   login(user) {
       console.log("pasé");
+      console.log(user)
     return axios
       .post(API_URL + 'iniciar_sesion/', {
         correo: user.correo,
         password: user.password
       })
       .then(response => {
- 
+        const  id = response.data.id
+        axios.defaults.headers.common['Authorization'] = `Token ${response.data.token}`
+        const datos = axios.get(API_URL + 'usuario/'+id)
         if (response.data.token) {
-          localStorage.setItem('user', JSON.stringify(response.data));
-          console.log(response.data);
-          console.log("llegue acá")
+          localStorage.setItem('user', JSON.stringify(datos));
+
         }
-        return response.data;
+        return datos;
       });
   }
 
