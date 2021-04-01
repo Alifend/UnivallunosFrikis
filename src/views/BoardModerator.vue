@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <header class="jumbotron">
-      <h3>{{}}</h3>
       <h1>Veterinario</h1>
     </header>
 
