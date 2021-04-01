@@ -9,22 +9,22 @@
           </router-link>
         </li>
         <li v-if="showAdminBoard" class="nav-item">
-          <router-link to="/admin" class="nav-link">Admin Board</router-link>
+          <router-link to="/admin" class="nav-link">Admin</router-link>
         </li>
         <li v-if="showModeratorBoard" class="nav-item">
-          <router-link to="/mod" class="nav-link">Moderator Board</router-link>
+          <router-link to="/mod" class="nav-link">Veterinario</router-link>
         </li>
         <li class="nav-item">
           <router-link v-if="currentUser" to="/user" class="nav-link">User</router-link>
         </li>
       </div>
 
+        <p v-if="showModeratorBoard" to="/mod">{{goVet()}}
+        </p>
+        <p v-if="showAdminBoard" to="/mod">{{goAdmin()}}
+        </p>
+
       <div v-if="!currentUser" class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <router-link to="/register" class="nav-link">
-            <font-awesome-icon icon="user-plus" />Sign Up
-          </router-link>
-        </li>
         <li class="nav-item">
           <router-link to="/login" class="nav-link">
             <font-awesome-icon icon="sign-in-alt" />Login
@@ -60,15 +60,15 @@ export default {
       return this.$store.state.auth.user;
     },
     showAdminBoard() {
-      if (this.currentUser && this.currentUser.roles) {
-        return this.currentUser.roles.includes('ROLE_ADMIN');
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 1;
       }
 
       return false;
     },
     showModeratorBoard() {
-      if (this.currentUser && this.currentUser.roles) {
-        return this.currentUser.roles.includes('ROLE_MODERATOR');
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 2;
       }
 
       return false;
@@ -78,6 +78,12 @@ export default {
     logOut() {
       this.$store.dispatch('auth/logout');
       this.$router.push('/login');
+    },
+    goAdmin(){
+      this.$router.push('/admin')
+    },
+    goVet(){
+      this.$router.push('/mod')
     }
   }
 };

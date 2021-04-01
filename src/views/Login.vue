@@ -9,40 +9,49 @@
       <form name="form" @submit.prevent="handleLogin">
         <div class="form-group">
           <label for="username">Username</label>
-          
-          <ValidationProvider name="username" rules="required" v-slot="{ errors }">
-          <input type="text" v-model="user.correo">
-          <span>{{ errors[0] }}</span>
+
+          <ValidationProvider
+            name="username"
+            rules="required"
+            v-slot="{ errors }"
+          >
+            <input type="text" v-model="user.correo" />
+            <span>{{ errors[0] }}</span>
           </ValidationProvider>
 
-          <div
-            class="alert alert-danger"
-            role="alert"
-          >Username is required!</div>
+          <div class="alert alert-danger" role="alert">
+            Username is required!
+          </div>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
 
-          <ValidationProvider name="password" rules="required" v-slot="{ errors }">
-          <input type="password" v-model="user.password">
-          <span>{{ errors[0] }}</span>
+          <ValidationProvider
+            name="password"
+            rules="required"
+            v-slot="{ errors }"
+          >
+            <input type="password" v-model="user.password" />
+            <span>{{ errors[0] }}</span>
           </ValidationProvider>
 
-          <div
-          
-    
-            class="alert alert-danger"
-            role="alert"
-          >Password is required!</div>
+          <div class="alert alert-danger" role="alert">
+            Password is required!
+          </div>
         </div>
         <div class="form-group">
           <button class="btn btn-primary btn-block" :disabled="loading">
-            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+            <span
+              v-show="loading"
+              class="spinner-border spinner-border-sm"
+            ></span>
             <span>Login</span>
           </button>
         </div>
         <div class="form-group">
-          <div v-if="message" class="alert alert-danger" role="alert">{{message}}</div>
+          <div v-if="message" class="alert alert-danger" role="alert">
+            {{ message }}
+          </div>
         </div>
       </form>
     </div>
@@ -50,48 +59,47 @@
 </template>
 
 <script>
-import User from '../models/user.js';
+import User from "../models/user.js";
 
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     return {
-      user: new User('', ''),
+      user: new User("", ""),
       loading: false,
-      message: ''
+      message: "",
     };
   },
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
-    }
+    },
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push('/profile');
+      this.$router.push("/profile");
     }
   },
   methods: {
     handleLogin() {
       this.loading = true;
-      
-        if (this.user.correo && this.user.password) {
-          this.$store.dispatch('auth/login', this.user).then(
-            () => {
-              this.$router.push('/profile');
-            },
-            error => {
-              this.loading = false;
-              this.message =
-                (error.response && error.response.data) ||
-                error.message ||
-                error.toString();
-            }
-          );
-        }
-      
-    }
-  }
+
+      if (this.user.correo && this.user.password) {
+        this.$store.dispatch("auth/login", this.user).then(
+          () => {
+            this.$router.push("/profile");
+          },
+          (error) => {
+            this.loading = false;
+            this.message =
+              (error.response && error.response.data) ||
+              error.message ||
+              error.toString();
+          }
+        );
+      }
+    },
+  },
 };
 </script>
 
