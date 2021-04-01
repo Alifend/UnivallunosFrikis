@@ -9,13 +9,24 @@ class UserService {
   }
 
   getUserBoard() {
-    return axios.get(API_URL + 'user', { headers: authHeader() });
+    return axios.get(API_URL + '', { headers: authHeader() });
   }
 
   getPropietarios(){
     return axios.get(API_URL + 'propietario/' , {headers:authHeader()});
   }
 
+  getAnimales(cedula){
+    return axios.get(API_URL + 'animales/'+cedula, {headers:authHeader()});
+  }
+
+  deleteUsuario(cedula){
+    return axios.delete(API_URL+ 'propietario/'+cedula , {headers:authHeader()});
+  }
+
+  editarUsuario(usuario){
+    return axios.put(API_URL+ 'propietario/' + usuario, {headers:authHeader()});
+  }
   getModeratorBoard() {
     return axios.get(API_URL + 'mod', { headers: authHeader() });
   }
