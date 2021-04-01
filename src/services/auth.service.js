@@ -12,14 +12,12 @@ class AuthService {
         password: user.password
       })
       .then(response => {
-        const  id = response.data.id
-        axios.defaults.headers.common['Authorization'] = `Token ${response.data.token}`
-        const datos = axios.get(API_URL + 'usuario/'+id)
+
         if (response.data.token) {
-          localStorage.setItem('user', JSON.stringify(datos));
+          localStorage.setItem('user', JSON.stringify(response.data));
 
         }
-        return datos;
+        return response.data
       });
   }
 
