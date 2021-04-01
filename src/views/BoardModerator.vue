@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <header class="jumbotron">
-      <h1>Veterinario maldito</h1>
+      <h1>Veterinario socio</h1>
     </header>
 
     <table class="table">
