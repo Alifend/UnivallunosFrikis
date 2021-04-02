@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <header class="jumbotron">
-
       <h1>Administrador</h1>
     </header>
     <h1>Soy admin</h1>
@@ -9,27 +8,27 @@
 </template>
 
 <script>
-import UserService from '../services/user.service';
+import UserService from "../services/user.service";
 
 export default {
-  name: 'User',
+  name: "User",
   data() {
     return {
-      content: ''
+      content: "",
     };
   },
   mounted() {
     UserService.getUserBoard().then(
-      response => {
+      (response) => {
         this.content = response.data;
       },
-      error => {
+      (error) => {
         this.content =
           (error.response && error.response.data) ||
           error.message ||
           error.toString();
       }
     );
-  }
+  },
 };
 </script>

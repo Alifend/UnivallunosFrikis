@@ -16,10 +16,9 @@
               class="form-control"
               name="nombre"
             />
-            <div
-              v-if="submitted && errors.has('nombre')"
-              class="alert-danger"
-            >{{errors.first('nombre')}}</div>
+            <div v-if="submitted && errors.has('nombre')" class="alert-danger">
+              {{ errors.first("nombre") }}
+            </div>
           </div>
           <div class="form-group">
             <label for="email">Email</label>
@@ -29,10 +28,9 @@
               class="form-control"
               name="email"
             />
-            <div
-              v-if="submitted && errors.has('email')"
-              class="alert-danger"
-            >{{errors.first('email')}}</div>
+            <div v-if="submitted && errors.has('email')" class="alert-danger">
+              {{ errors.first("email") }}
+            </div>
           </div>
           <div class="form-group">
             <label for="password">Password</label>
@@ -45,7 +43,9 @@
             <div
               v-if="submitted && errors.has('password')"
               class="alert-danger"
-            >{{errors.first('password')}}</div>
+            >
+              {{ errors.first("password") }}
+            </div>
           </div>
           <div class="form-group">
             <label for="fecha_nacimiento">Fecha de nacimiento</label>
@@ -58,7 +58,9 @@
             <div
               v-if="submitted && errors.has('fecha_nacimiento')"
               class="alert-danger"
-            >{{errors.first('fecha_nacimiento')}}</div>
+            >
+              {{ errors.first("fecha_nacimiento") }}
+            </div>
           </div>
           <div class="form-group">
             <label for="direccion">Dirección</label>
@@ -71,7 +73,9 @@
             <div
               v-if="submitted && errors.has('direccion')"
               class="alert-danger"
-            >{{errors.first('direccion')}}</div>
+            >
+              {{ errors.first("direccion") }}
+            </div>
           </div>
           <div class="form-group">
             <label for="telefono">Telefono</label>
@@ -84,7 +88,9 @@
             <div
               v-if="submitted && errors.has('telefono')"
               class="alert-danger"
-            >{{errors.first('telefono')}}</div>
+            >
+              {{ errors.first("telefono") }}
+            </div>
           </div>
           <div class="form-group">
             <label for="Tipo">Perfil</label>
@@ -94,10 +100,9 @@
               class="form-control"
               name="perfil"
             />
-            <div
-              v-if="submitted && errors.has('perfil')"
-              class="alert-danger"
-            >{{errors.first('perfil')}}</div>
+            <div v-if="submitted && errors.has('perfil')" class="alert-danger">
+              {{ errors.first("perfil") }}
+            </div>
           </div>
           <div class="form-group">
             <button class="btn btn-primary btn-block">Sign Up</button>
@@ -109,57 +114,56 @@
         v-if="message"
         class="alert"
         :class="successful ? 'alert-success' : 'alert-danger'"
-      >{{message}}</div>
+      >
+        {{ message }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import User from '../models/user';
+import User from "../models/user";
 
 export default {
-  name: 'Register',
+  name: "Register",
   data() {
     return {
-      user: new User('', '', ''),
+      user: new User("", "", ""),
       submitted: false,
       successful: false,
-      message: ''
+      message: "",
     };
   },
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
-    }
+    },
   },
   mounted() {
     if (this.loggedIn) {
-      this.$router.push('/profile');
+      this.$router.push("/profile");
     }
   },
   methods: {
     handleRegister() {
-      this.message = '';
+      this.message = "";
       this.submitted = true;
 
-        
-          this.$store.dispatch('auth/register', this.user).then(
-            data => {
-              this.message = data.message;
-              this.successful = true;
-            },
-            error => {
-              this.message =
-                (error.response && error.response.data) ||
-                error.message ||
-                error.toString();
-              this.successful = false;
-            }
-          );
-        
-
-    }
-  }
+      this.$store.dispatch("auth/register", this.user).then(
+        (data) => {
+          this.message = data.message;
+          this.successful = true;
+        },
+        (error) => {
+          this.message =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+          this.successful = false;
+        }
+      );
+    },
+  },
 };
 </script>
 

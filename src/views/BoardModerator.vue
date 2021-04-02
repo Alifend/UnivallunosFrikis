@@ -2,8 +2,8 @@
   <div>
     <!-- Header -->
     <header class="jumbotron">
-        <h1>Clientes</h1>
-      </header>
+      <h1>Clientes</h1>
+    </header>
 
     <!-- Filter -->
     <div>
@@ -16,7 +16,7 @@
       />
       <br />
     </div>
-    
+
     <!-- Table -->
     <div class="container">
       <table class="table">
@@ -63,13 +63,11 @@
               >
                 Eliminar
               </button>
-              
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-
     <!-- Modal -->
     <div
       class="modal fade"
@@ -185,8 +183,6 @@
         </div>
       </div>
     </div>
-
-
   </div>
 </template>
 
@@ -238,9 +234,8 @@ export default {
     );
   },
   methods: {
-    Test(){
+    Test() {
       console.log(this.propietarios);
-
     },
     PeticionPut() {
       UserService.editarUsuario(this.selected).then(
@@ -304,8 +299,12 @@ export default {
       return this.propietarios.filter((propietario) => {
         const nombre = propietario.nombre.toString().toLowerCase();
         const apellido = propietario.apellido.toString().toLowerCase();
-        const tipodocumento = propietario.tipo_documento.toString().toLowerCase();
-        const numerodocumento = propietario.numero_documento.toString().toLowerCase();
+        const tipodocumento = propietario.tipo_documento
+          .toString()
+          .toLowerCase();
+        const numerodocumento = propietario.numero_documento
+          .toString()
+          .toLowerCase();
         const genero = propietario.sexo.toString().toLowerCase();
         const searchTerm = this.filter.toString().toLowerCase();
 
