@@ -19,7 +19,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(propietario, i) in propietarios" :key="i">
+          <tr v-for="(propietario, i) in filteredRows" :key="i">
             <th scope="row">{{ propietario.id }}</th>
             <td>{{ propietario.nombre }}</td>
             <td>{{ propietario.apellido }}</td>
@@ -55,7 +55,16 @@
         </tbody>
       </table>
     </div>
-
+    <div>
+      <input
+        class="form-control"
+        id="myInput"
+        type="text"
+        placeholder="Search.."
+        v-model="filter"
+      />
+      <br />
+    </div>
     <!-- Modal -->
     <div
       class="modal fade"
@@ -69,7 +78,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">
-              Editar Proietario
+              Editar Propietario
             </h5>
             <button
               type="button"
@@ -111,14 +120,15 @@
                 >Tipo de documento</label
               >
 
-              <select v-bind="selected.tipo_documento"
+              <select
+                v-model="selected.tipo_documento"
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-                <option selected>{{
+                <option selected value="selected.tipo_documento">{{
                   dict_doc[selected.tipo_documento]
                 }}</option>
-                <option>{{
+                <option value="selected.tipo_documento">{{
                   dict_doc[selected.tipo_documento + 1]
                 }}</option>
               </select>
@@ -138,7 +148,7 @@
             <div class="md-form">
               <i class="fas fa-user prefix grey-text"></i>
               <label data-error="wrong" data-success="right" for="form3"
-                >Genero</label
+                >Género</label
               >
               <select
                 v-bind="selected.sexo"
@@ -158,23 +168,35 @@
             >
               Close
             </button>
-            <button type="button" v-on:click="PeticionPut()" class="btn btn-primary">Save changes</button>
+            <button
+              type="button"
+              v-on:click="PeticionPut()"
+              data-dismiss="modal"
+              class="btn btn-primary"
+            >
+              Save changes
+            </button>
           </div>
         </div>
       </div>
     </div>
+
+    <button type="button" v-on:click="Test()" class="btn btn-primary">
+      Test
+    </button>
   </div>
 </template>
 
 <script>
 import UserService from "../services/user.service";
-import Propietario from "../models/propietario"
+import Propietario from "../models/propietario";
 export default {
   name: "User",
   data() {
     return {
+      filter: "",
       content: "",
-      propietarios: "",
+      propietarios: [],
       dict_genero: { 1: "F", 2: "M", 3: "F" },
       dict_doc: {
         1: "Cédula de ciudadanía",
@@ -188,7 +210,11 @@ export default {
   created() {
     UserService.getPropietarios().then(
       (response) => {
-        this.propietarios = response.data;
+        let info = response.data;
+        for (var a in info) {
+          this.propietarios.push(info[a]);
+        }
+        console.log(this.propietarios);
       },
       (error) => {
         console.log("Pues hubo error socio" + error);
@@ -209,11 +235,16 @@ export default {
     );
   },
   methods: {
+    Test(){
+      console.log(this.propietarios);
+
+    },
     PeticionPut() {
       UserService.editarUsuario(this.selected).then(
         (response) => {
-          console.log("Exito editando"+response)
-          this.ActualizarTabla()
+          console.log("Exito editando" + response);
+
+          this.ActualizarTabla();
         },
         (error) => {
           this.content =
@@ -223,16 +254,16 @@ export default {
         }
       );
     },
-  ActualizarTabla() {
-    UserService.getPropietarios().then(
-      (response) => {
-        this.propietarios = response.data;
-      },
-      (error) => {
-        console.log("Pues hubo error socio" + error);
-      }
-    );
-  },
+    ActualizarTabla() {
+      UserService.getPropietarios().then(
+        (response) => {
+          this.propietarios = response.data;
+        },
+        (error) => {
+          console.log("Pues hubo error socio" + error);
+        }
+      );
+    },
     VerUsuario(i) {
       UserService.getAnimales(this.propietarios[i].id).then(
         (response) => {
@@ -262,7 +293,27 @@ export default {
     EditarUsuario(i) {
       //this.selected = this.propietarios[i];
       // asignación sin bindear
-      this.selected = Object.assign({}, this.propietarios[i])
+      this.selected = Object.assign({}, this.propietarios[i]);
+    },
+  },
+  computed: {
+    filteredRows() {
+      return this.propietarios.filter((propietario) => {
+        const nombre = propietario.nombre.toString().toLowerCase();
+        const apellido = propietario.apellido.toString().toLowerCase();
+        const tipodocumento = propietario.tipo_documento.toString().toLowerCase();
+        const numerodocumento = propietario.numero_documento.toString().toLowerCase();
+        const genero = propietario.sexo.toString().toLowerCase();
+        const searchTerm = this.filter.toString().toLowerCase();
+
+        return (
+          nombre.includes(searchTerm) ||
+          apellido.includes(searchTerm) ||
+          tipodocumento.includes(searchTerm) ||
+          numerodocumento.includes(searchTerm) ||
+          genero.includes(searchTerm)
+        );
+      });
     },
   },
 };
