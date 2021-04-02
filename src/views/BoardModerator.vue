@@ -5,6 +5,16 @@
       <h1>Clientes</h1>
     </header>
 
+    <!-- Añadir -->
+    <button
+      type="button"
+      data-toggle="modal"
+      data-target="#modalAñadir"
+      class="añadir btn btn-success float-right"
+    >
+      + Añadir Propietario
+    </button>
+
     <!-- Filter -->
     <div>
       <input
@@ -14,12 +24,11 @@
         placeholder="Search.."
         v-model="filter"
       />
-      <br />
     </div>
 
     <!-- Table -->
-    <div class="container">
-      <table class="table text-center">
+    <div class="container align-middle ">
+      <table class="table text-center ">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -33,19 +42,21 @@
         </thead>
         <tbody>
           <tr v-for="(propietario, i) in filteredRows" :key="i">
-            <th scope="row">{{ propietario.id }}</th>
-            <td>{{ propietario.nombre }}</td>
-            <td>{{ propietario.apellido }}</td>
-            <td>{{ dict_doc[propietario.tipo_documento] }}</td>
-            <td>{{ propietario.numero_documento }}</td>
-            <td>{{ dict_genero[propietario.sexo] }}</td>
+            <th class="align-middle" scope="row">{{ propietario.id }}</th>
+            <td class="align-middle">{{ propietario.nombre }}</td>
+            <td class="align-middle">{{ propietario.apellido }}</td>
+            <td class="align-middle">
+              {{ dict_doc[propietario.tipo_documento] }}
+            </td>
+            <td class="align-middle">{{ propietario.numero_documento }}</td>
+            <td class="align-middle">{{ dict_genero[propietario.sexo] }}</td>
             <td>
               <button
                 type="button"
                 class="btn btn-success botoncito"
                 v-on:click="VerUsuario(i)"
               >
-                Ver
+                Mascotas
               </button>
               <button
                 type="button"
@@ -68,6 +79,7 @@
         </tbody>
       </table>
     </div>
+
     <!-- Modal -->
     <div
       class="modal fade"
@@ -183,6 +195,122 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="modalAñadir"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="modalAñadir"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Añadir Propietario
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body ">
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Nombre:
+              </label>
+              <input
+                type="text"
+                v-model="nuevo.nombre"
+                id="form3"
+                class="form-control validate"
+              />
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Apellido</label
+              >
+              <input
+                type="text"
+                v-model="nuevo.apellido"
+                id="form3"
+                class="form-control validate"
+              />
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Tipo de documento</label
+              >
+
+              <select
+                v-model="nuevo.tipo_documento"
+                class="form-control form-select-lg mb-3"
+                aria-label=".form-select-lg example"
+              >
+                <option selected value="selected.tipo_documento">{{
+                  dict_doc[selected.tipo_documento]
+                }}</option>
+                <option value="selected.tipo_documento">{{
+                  dict_doc[selected.tipo_documento + 1]
+                }}</option>
+              </select>
+            </div>
+            <div class="md-form ">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Numero de documento</label
+              >
+              <input
+                type="text"
+                v-model="nuevo.numero_documento"
+                id="form3"
+                class="form-control validate"
+              />
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Género</label
+              >
+              <select
+                v-bind="nuevo.sexo"
+                class="form-control form-select-lg mb-3"
+                aria-label=".form-select-lg example"
+              >
+                <option selected>{{ dict_genero[selected.sexo] }}</option>
+                <option value="1">{{ dict_genero[selected.sexo + 1] }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              v-on:click="AñadirPropietario()"
+              data-dismiss="modal"
+              class="btn btn-primary"
+            >
+              Save changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -193,7 +321,8 @@ export default {
   name: "User",
   data() {
     return {
-      go : false,
+      nuevo: new Propietario(),
+      go: false,
       filter: "",
       content: "",
       propietarios: [],
@@ -235,6 +364,22 @@ export default {
     );
   },
   methods: {
+    AñadirPropietario() {
+      UserService.postPropietario().then(
+        (response) => {
+          console.log("Exito añadiendo" + response);
+
+          this.ActualizarTabla();
+          this.nuevo = new Propietario();
+        },
+        (error) => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
     Test() {
       console.log(this.propietarios);
     },
@@ -266,8 +411,11 @@ export default {
     VerUsuario(i) {
       UserService.getAnimales(this.propietarios[i].id).then(
         (response) => {
-          localStorage.setItem('propietario',JSON.stringify(this.propietarios[i]));
-          console.log(this.propietarios[i].id)
+          localStorage.setItem(
+            "propietario",
+            JSON.stringify(this.propietarios[i])
+          );
+          console.log(this.propietarios[i].id);
           this.animales = response.data;
         },
         (error) => {
@@ -277,7 +425,7 @@ export default {
             error.toString();
         }
       );
-      this.$router.push('/mascotas');
+      this.$router.push("/mascotas");
     },
     EliminarUsuario(i) {
       UserService.deleteUsuario(this.propietarios[i].id).then(
@@ -300,7 +448,7 @@ export default {
   },
   computed: {
     filteredRows() {
-      console.log(typeof(this.propietarios))
+      console.log(typeof this.propietarios);
       return this.propietarios.filter((propietario) => {
         const nombre = propietario.nombre.toString().toLowerCase();
         const apellido = propietario.apellido.toString().toLowerCase();
@@ -333,5 +481,11 @@ export default {
 label {
   display: inline-block;
   text-align: right;
+}
+.añadir {
+  margin: 1%;
+}
+
+td {
 }
 </style>
