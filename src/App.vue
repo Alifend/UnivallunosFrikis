@@ -4,16 +4,11 @@
       <a href class="navbar-brand" @click.prevent></a>
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
-          <router-link to="/home" class="nav-link">
-            <font-awesome-icon icon="home" />Home
+          <router-link to="/vet" class="nav-link">
+            <font-awesome-icon icon="home" /> Clientes
           </router-link>
         </li>
-        <li v-if="showAdminBoard" class="nav-item">
-          <router-link to="/admin" class="nav-link">Admin</router-link>
-        </li>
-        <li v-if="showModeratorBoard" class="nav-item">
-          <router-link to="/vet" class="nav-link">Clientes</router-link>
-        </li>
+
         
         <li class="nav-item">
           <router-link v-if="currentUser" to="/user" class="nav-link"
@@ -22,8 +17,6 @@
         </li>
       </div>
 
-      <p v-if="showModeratorBoard" to="/vet">{{ goVet() }}</p>
-      <p v-if="showAdminBoard" to="/vet">{{ goAdmin() }}</p>
 
       <div v-if="!currentUser" class="navbar-nav ml-auto">
         <li class="nav-item">
@@ -64,7 +57,7 @@ export default {
       if (this.currentUser && this.currentUser.perfil) {
         return this.currentUser.perfil == 1;
       }
-
+      
       return false;
     },
     showModeratorBoard() {
@@ -73,19 +66,21 @@ export default {
       }
 
       return false;
-    },
+    }
+  },
+  watch:{
+    showModeratorBoard: function (val){
+      if (val == 2){
+        this.goVet()
+      }
+    }
+    
   },
   methods: {
     logOut() {
       this.$store.dispatch("auth/logout");
       this.$router.push("/login");
-    },
-    goAdmin() {
-      this.$router.push("/admin");
-    },
-    goVet() {
-      this.$router.push("/vet");
-    },
+    }
   },
 };
 </script>

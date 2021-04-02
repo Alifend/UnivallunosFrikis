@@ -19,7 +19,7 @@
 
     <!-- Table -->
     <div class="container">
-      <table class="table">
+      <table class="table text-center">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -27,6 +27,7 @@
             <th scope="col">Sexo</th>
             <th scope="col">Fecha de Nacimiento</th>
             <th scope="col">Raza</th>
+            <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -34,19 +35,19 @@
             <th scope="row">{{ mascota.id }}</th>
             <td>{{ mascota.nombre }}</td>
             <td>{{ mascota.sexo }}</td>
-            <td>{{ mascota.fecha_nacimiento}}</td>
+            <td>{{ mascota.fecha_nacimiento }}</td>
             <td>{{ mascota.raza }}</td>
             <td>
               <button
                 type="button"
                 class="btn btn-success botoncito"
-                v-on:click="VerUsuario(i)"
+                v-on:click="VerMascota(i)"
               >
-                Ver
+                Historia Clínica
               </button>
               <button
                 type="button"
-                v-on:click="EditarUsuario(i)"
+                v-on:click="EditarMascota(i)"
                 data-toggle="modal"
                 data-target="#exampleModal"
                 class="btn btn-info botoncito"
@@ -56,7 +57,7 @@
               <button
                 type="button"
                 class="btn btn-danger botoncito"
-                v-on:click="EliminarUsuario(i)"
+                v-on:click="EliminarMascota(i)"
               >
                 Eliminar
               </button>
@@ -106,53 +107,38 @@
             <div class="md-form">
               <i class="fas fa-user prefix grey-text"></i>
               <label data-error="wrong" data-success="right" for="form3"
-                >Apellido</label
-              >
-              <input
-                type="text"
-                v-model="selected.apellido"
-                id="form3"
-                class="form-control validate"
-              />
-            </div>
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Tipo de documento</label
-              >
-
-              <select
-                v-model="selected.tipo_documento"
-                class="form-control form-select-lg mb-3"
-                aria-label=".form-select-lg example"
-              >
-                <option selected value="selected.tipo_documento">{{
-                  dict_doc[selected.tipo_documento]
-                }}</option>
-                <option value="selected.tipo_documento">{{
-                  dict_doc[selected.tipo_documento + 1]
-                }}</option>
-              </select>
-            </div>
-            <div class="md-form ">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Numero de documento</label
-              >
-              <input
-                type="text"
-                v-model="selected.numero_documento"
-                id="form3"
-                class="form-control validate"
-              />
-            </div>
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
                 >Género</label
               >
               <select
                 v-bind="selected.sexo"
+                class="form-control form-select-lg mb-3"
+                aria-label=".form-select-lg example"
+              >
+                <option selected>{{ dict_genero[selected.sexo] }}</option>
+                <option value="1">{{ dict_genero[selected.sexo + 1] }}</option>
+              </select>
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Fecha de Nacimiento</label
+              >
+                <input
+                type="date"
+                v-model="selected.fecha_nacimiento"
+                id="form3"
+                class="form-control validate"
+              />
+
+              
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Raza</label
+              >
+              <select
+                v-bind="selected.raza"
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
@@ -181,6 +167,9 @@
         </div>
       </div>
     </div>
+    <button type="button" v-on:click="Test()" class="btn btn-primary">
+      Save changes
+    </button>
   </div>
 </template>
 
@@ -191,6 +180,7 @@ export default {
   name: "Mascota",
   data() {
     return {
+      array: [{"hola":"como"}],
       filter: "",
       content: "",
       mascotas: [],
@@ -204,10 +194,27 @@ export default {
       selected: new Mascota(),
     };
   },
+  created() {
+    let id =  JSON.parse(localStorage.getItem('propietario')).id
+    
+    MascotaService.getMascotas(id).then(
+      (response) => {
+        let info = response.data;
+        for (var a in info) {
+          this.mascotas.push(info[a]);
+        }
+      },
+      (error) => {
+        console.log("Pues hubo error socio" + error);
+      }
+    );
+  },  
   methods: {
-
+    Test() {
+      console.log(this.mascotas);
+    },
     PeticionPut() {
-      MascotaService.editarUsuario(this.selected).then(
+      MascotaService.editarMascota(this.selected).then(
         (response) => {
           console.log("Exito editando" + response);
 
@@ -222,7 +229,7 @@ export default {
       );
     },
     ActualizarTabla() {
-      let id = localStorage.getItem('propietario').id
+    let id =  JSON.parse(localStorage.getItem('propietario')).id
       MascotaService.getMascotas(id).then(
         (response) => {
           this.mascotas = response.data;
@@ -233,7 +240,7 @@ export default {
       );
     },
     VerMascota(i) {
-        //Pendiente para ver historia clínica
+      //Pendiente para ver historia clínica
       MascotaService.getMascotas(this.mascotas[i].id).then(
         (response) => {
           this.animales = response.data;
@@ -259,7 +266,7 @@ export default {
         }
       );
     },
-    EditarUsuario(i) {
+    EditarMascota(i) {
       // asignación sin bindear
       this.selected = Object.assign({}, this.mascotas[i]);
     },
@@ -268,12 +275,10 @@ export default {
     filteredRows() {
       return this.mascotas.filter((mascota) => {
         const nombre = mascota.nombre.toString().toLowerCase();
-      
+        
         const searchTerm = this.filter.toString().toLowerCase();
 
-        return (
-          nombre.includes(searchTerm)
-        );
+        return nombre.includes(searchTerm);
       });
     },
   },

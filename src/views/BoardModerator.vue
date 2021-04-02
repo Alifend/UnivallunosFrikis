@@ -19,7 +19,7 @@
 
     <!-- Table -->
     <div class="container">
-      <table class="table">
+      <table class="table text-center">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -266,11 +266,9 @@ export default {
     VerUsuario(i) {
       UserService.getAnimales(this.propietarios[i].id).then(
         (response) => {
-          localStorage.setItem('propietario',this.propietarios[i]);
-          localStorage.setItem('animales', JSON.stringify(response.data));
-          this.goMascotas();
+          localStorage.setItem('propietario',JSON.stringify(this.propietarios[i]));
+          console.log(this.propietarios[i].id)
           this.animales = response.data;
-                    console.log("respuesta posiitva");
         },
         (error) => {
           this.content =
@@ -279,6 +277,7 @@ export default {
             error.toString();
         }
       );
+      this.$router.push('/mascotas');
     },
     EliminarUsuario(i) {
       UserService.deleteUsuario(this.propietarios[i].id).then(
@@ -301,6 +300,7 @@ export default {
   },
   computed: {
     filteredRows() {
+      console.log(typeof(this.propietarios))
       return this.propietarios.filter((propietario) => {
         const nombre = propietario.nombre.toString().toLowerCase();
         const apellido = propietario.apellido.toString().toLowerCase();
