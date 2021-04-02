@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import { ValidationProvider } from 'vee-validate';
+import Vuelidate from 'vuelidate'
 import { router } from './router';
 import store from './store';
 import 'bootstrap';
@@ -20,6 +21,7 @@ library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.config.productionTip = false;
 
+Vue.use(Vuelidate)
 Vue.use(VeeValidate);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

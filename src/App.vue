@@ -3,12 +3,11 @@
     <nav class="navbar navbar-expand navbar-dark bg-dark">
       <a href class="navbar-brand" @click.prevent></a>
       <div class="navbar-nav mr-auto">
-        <li class="nav-item">
+        <li v-if="showModeratorBoard" class="nav-item">
           <router-link to="/vet" class="nav-link">
             <font-awesome-icon icon="home" /> Clientes
           </router-link>
         </li>
-
         
         <li class="nav-item">
           <router-link v-if="currentUser" to="/profile" class="nav-link"

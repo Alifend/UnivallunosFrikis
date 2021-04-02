@@ -6,38 +6,31 @@
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
         class="profile-img-card"
       />
-      <form name="form" @submit.prevent="handleLogin">
+      <form @submit.prevent="handleLogin">
         <div class="form-group">
-          <label for="username">Username</label>
-
-          <ValidationProvider
-            name="username"
-            rules="required"
-            v-slot="{ errors }"
+          <label class="text-center">Email</label>
+          <input type="email" v-model="user.correo" class="form-control" /><br>
+          <span
+            v-if="
+              (!$v.user.correo.required || !$v.user.correo.email) &&
+                $v.user.correo.$dirty
+            "
+            class="text-danger alert alert-danger"
+            role="alert"
           >
-            <input type="text" v-model="user.correo" />
-            <span>{{ errors[0] }}</span>
-          </ValidationProvider>
-
-          <div class="alert alert-danger" role="alert">
-            Username is required!
-          </div>
+            Email requerido</span
+          >
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
-
-          <ValidationProvider
-            name="password"
-            rules="required"
-            v-slot="{ errors }"
+          <label class="text-center">Password</label>
+          <input type="password" v-model="user.password" class="form-control" /><br>
+          <span
+            v-if="!$v.user.password.required && $v.user.password.$dirty"
+            class="text-danger alert alert-danger"
+            role="alert"
           >
-            <input type="password" v-model="user.password" />
-            <span>{{ errors[0] }}</span>
-          </ValidationProvider>
-
-          <div class="alert alert-danger" role="alert">
-            Password is required!
-          </div>
+            Password requerido</span
+          >
         </div>
         <div class="form-group">
           <button class="btn btn-primary btn-block" :disabled="loading">
@@ -60,6 +53,7 @@
 
 <script>
 import User from "../models/user.js";
+import { required, email } from "vuelidate/lib/validators";
 
 export default {
   name: "Login",
@@ -69,6 +63,17 @@ export default {
       loading: false,
       message: "",
     };
+  },
+  validations: {
+    user: {
+      correo: {
+        required,
+        email,
+      },
+      password: {
+        required,
+      },
+    },
   },
   computed: {
     loggedIn() {
@@ -83,7 +88,11 @@ export default {
   methods: {
     handleLogin() {
       this.loading = true;
-
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        this.loading = false;
+        return;
+      }
       if (this.user.correo && this.user.password) {
         this.$store.dispatch("auth/login", this.user).then(
           () => {
