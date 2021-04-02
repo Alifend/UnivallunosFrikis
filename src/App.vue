@@ -16,14 +16,14 @@
         </li>
         
         <li class="nav-item">
-          <router-link v-if="currentUser" to="/user" class="nav-link">Perfil</router-link>
+          <router-link v-if="currentUser" to="/user" class="nav-link"
+            >Perfil</router-link
+          >
         </li>
       </div>
 
-        <p v-if="showModeratorBoard">{{goVet()}}
-        </p>
-        <p v-if="showAdminBoard" to="/admin">{{goAdmin()}}
-        </p>
+      <p v-if="showModeratorBoard" to="/vet">{{ goVet() }}</p>
+      <p v-if="showAdminBoard" to="/vet">{{ goAdmin() }}</p>
 
       <div v-if="!currentUser" class="navbar-nav ml-auto">
         <li class="nav-item">
@@ -73,19 +73,19 @@ export default {
       }
 
       return false;
-    }
+    },
   },
   methods: {
     logOut() {
-      this.$store.dispatch('auth/logout');
-      this.$router.push('/login');
+      this.$store.dispatch("auth/logout");
+      this.$router.push("/login");
     },
-    goAdmin(){
-      this.$router.push('/admin')
+    goAdmin() {
+      this.$router.push("/admin");
     },
-    goVet(){
-      this.$router.push('/vet')
-    }
-  }
+    goVet() {
+      this.$router.push("/vet");
+    },
+  },
 };
 </script>

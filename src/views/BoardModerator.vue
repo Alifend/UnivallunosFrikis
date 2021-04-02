@@ -68,7 +68,6 @@
         </tbody>
       </table>
     </div>
-
     <!-- Modal -->
     <div
       class="modal fade"
@@ -184,10 +183,6 @@
         </div>
       </div>
     </div>
-
-      <p v-if="go" to="/mascotas">{{goMascotas()}}
-        </p>
-
   </div>
 </template>
 
@@ -240,8 +235,8 @@ export default {
     );
   },
   methods: {
-    goMascotas(){
-      this.$router.push('/mascotas');
+    Test() {
+      console.log(this.propietarios);
     },
     PeticionPut() {
       UserService.editarUsuario(this.selected).then(
