@@ -1,74 +1,188 @@
 <template>
-  <div class="container">
-    <header class="jumbotron">
-      <h1>Veterinario</h1>
-    </header>
+  <div>
+    <!-- Table -->
+    <div class="container">
+      <header class="jumbotron">
+        <h1>Clientes</h1>
+      </header>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Apellido</th>
-          <th scope="col">Tipo de documento</th>
-          <th scope="col">Número de documento</th>
-          <th scope="col">Genero</th>
-          <th scope="col">Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(propietario, i) in propietarios" :key="i">
-          <th scope="row">{{ propietario.id }}</th>
-          <td>{{ propietario.nombre }}</td>
-          <td>{{ propietario.apellido }}</td>
-          <td>{{ dict_doc[propietario.tipo_documento] }}</td>
-          <td>{{ propietario.numero_documento }}</td>
-          <td>{{ dict_genero[propietario.sexo] }}</td>
-          <td>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Tipo de documento</th>
+            <th scope="col">Número de documento</th>
+            <th scope="col">Genero</th>
+            <th scope="col">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(propietario, i) in propietarios" :key="i">
+            <th scope="row">{{ propietario.id }}</th>
+            <td>{{ propietario.nombre }}</td>
+            <td>{{ propietario.apellido }}</td>
+            <td>{{ dict_doc[propietario.tipo_documento] }}</td>
+            <td>{{ propietario.numero_documento }}</td>
+            <td>{{ dict_genero[propietario.sexo] }}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-success botoncito"
+                v-on:click="VerUsuario(i)"
+              >
+                Ver
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger botoncito"
+                v-on:click="EliminarUsuario(i)"
+              >
+                Eliminar
+              </button>
+              <button
+                type="button"
+                v-on:click="EditarUsuario(i)"
+                data-toggle="modal"
+                data-target="#exampleModal"
+                class="btn btn-secondary botoncito"
+              >
+                Editar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Editar Proietario
+            </h5>
             <button
               type="button"
-              class="btn btn-success botoncito"
-              v-on:click="VerUsuario(i)"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
             >
-              Ver
+              <span aria-hidden="true">&times;</span>
             </button>
+          </div>
+          <div class="modal-body ">
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Nombre:
+              </label>
+              <input
+                type="text"
+                v-model="selected.nombre"
+                id="form3"
+                class="form-control validate"
+              />
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Apellido</label
+              >
+              <input
+                type="text"
+                v-model="selected.apellido"
+                id="form3"
+                class="form-control validate"
+              />
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Tipo de documento</label
+              >
+
+              <select v-bind="selected.tipo_documento"
+                class="form-control form-select-lg mb-3"
+                aria-label=".form-select-lg example"
+              >
+                <option selected>{{
+                  dict_doc[selected.tipo_documento]
+                }}</option>
+                <option>{{
+                  dict_doc[selected.tipo_documento + 1]
+                }}</option>
+              </select>
+            </div>
+            <div class="md-form ">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Numero de documento</label
+              >
+              <input
+                type="text"
+                v-model="selected.numero_documento"
+                id="form3"
+                class="form-control validate"
+              />
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Genero</label
+              >
+              <select
+                v-bind="selected.sexo"
+                class="form-control form-select-lg mb-3"
+                aria-label=".form-select-lg example"
+              >
+                <option selected>{{ dict_genero[selected.sexo] }}</option>
+                <option value="1">{{ dict_genero[selected.sexo + 1] }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-danger botoncito"
-              v-on:click="EliminarUsuario(i)"
+              class="btn btn-secondary"
+              data-dismiss="modal"
             >
-              Eliminar
+              Close
             </button>
-            <button
-              type="button"
-              class="btn btn-secondary botoncito"
-              v-on:click="EditarUsuario(i)"
-            >
-              Editar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            <button type="button" v-on:click="PeticionPut()" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import UserService from "../services/user.service";
-
+import Propietario from "../models/propietario"
 export default {
   name: "User",
   data() {
     return {
       content: "",
       propietarios: "",
-      dict_genero: { 1: "F", 2: "M", 3: "P" },
+      dict_genero: { 1: "F", 2: "M", 3: "F" },
       dict_doc: {
         1: "Cédula de ciudadanía",
-        2: "Cédula extranjería",
-        3: "Tarjeta de Identidad",
+        2: "Tarjeta de Identidad",
+        3: "Cédula de ciudadanía",
       },
-      animales : "",
+      animales: "",
+      selected: new Propietario(),
     };
   },
   created() {
@@ -95,8 +209,32 @@ export default {
     );
   },
   methods: {
+    PeticionPut() {
+      UserService.editarUsuario(this.selected).then(
+        (response) => {
+          console.log("Exito editando"+response)
+          this.ActualizarTabla()
+        },
+        (error) => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
+  ActualizarTabla() {
+    UserService.getPropietarios().then(
+      (response) => {
+        this.propietarios = response.data;
+      },
+      (error) => {
+        console.log("Pues hubo error socio" + error);
+      }
+    );
+  },
     VerUsuario(i) {
-      UserService.getAnimales(i).then(
+      UserService.getAnimales(this.propietarios[i].id).then(
         (response) => {
           this.animales = response.data;
         },
@@ -109,9 +247,9 @@ export default {
       );
     },
     EliminarUsuario(i) {
-      UserService.getAnimales(i).then(
+      UserService.deleteUsuario(this.propietarios[i].id).then(
         (response) => {
-          this.animales = response.data;
+          console.log(response);
         },
         (error) => {
           this.content =
@@ -122,17 +260,9 @@ export default {
       );
     },
     EditarUsuario(i) {
-      UserService.editarUsuario(this.propietarios[i]).then(
-        (response) => {
-        console.log(response)
-        },
-        (error) => {
-          this.content =
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString();
-        }
-      );
+      //this.selected = this.propietarios[i];
+      // asignación sin bindear
+      this.selected = Object.assign({}, this.propietarios[i])
     },
   },
 };
@@ -141,5 +271,9 @@ export default {
 <style scoped>
 .botoncito {
   margin: 1%;
+}
+label {
+  display: inline-block;
+  text-align: right;
 }
 </style>

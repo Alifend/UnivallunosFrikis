@@ -13,19 +13,22 @@ class UserService {
   }
 
   getPropietarios(){
-    return axios.get(API_URL + 'propietario/' , {headers:authHeader()});
+    
+    let a = axios.get(API_URL + 'propietario/' , {headers:authHeader()});
+    console.log(a)
+    return a
   }
 
-  getAnimales(cedula){
-    return axios.get(API_URL + 'animales/'+cedula, {headers:authHeader()});
+  getAnimales(id){
+    return axios.get(API_URL + 'propietario/'+id+'/mascota/', {headers:authHeader()});
   }
 
-  deleteUsuario(cedula){
-    return axios.delete(API_URL+ 'propietario/'+cedula , {headers:authHeader()});
+  deleteUsuario(id){
+    return axios.delete(API_URL+ 'propietario/'+id , {headers:authHeader()});
   }
 
-  editarUsuario(usuario){
-    return axios.put(API_URL+ 'propietario/' + usuario, {headers:authHeader()});
+  editarUsuario( usuario ){
+    return axios.put(API_URL+ 'propietario/'+usuario.id+'/',usuario,{headers:authHeader()});
   }
   getModeratorBoard() {
     return axios.get(API_URL + 'mod', { headers: authHeader() });
