@@ -10,11 +10,6 @@ export const router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
       path: '/home',
       component: Home
     },
@@ -49,6 +44,12 @@ export const router = new Router({
       name: 'user',
       // lazy-loaded
       component: () => import('./views/BoardUser.vue')
+    },
+    {
+      path: '/mascotas',
+      name: 'mascotas',
+      // lazy-loaded
+      component: () => import('./views/Mascotas.vue')
     }
   ]
 });

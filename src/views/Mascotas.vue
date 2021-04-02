@@ -2,7 +2,7 @@
   <div>
     <!-- Header -->
     <header class="jumbotron">
-      <h1>Clientes</h1>
+      <h1>Mascotas</h1>
     </header>
 
     <!-- Filter -->
@@ -24,21 +24,18 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">Nombre</th>
-            <th scope="col">Apellido</th>
-            <th scope="col">Tipo de documento</th>
-            <th scope="col">Número de documento</th>
-            <th scope="col">Genero</th>
-            <th scope="col">Acciones</th>
+            <th scope="col">Sexo</th>
+            <th scope="col">Fecha de Nacimiento</th>
+            <th scope="col">Raza</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(propietario, i) in filteredRows" :key="i">
-            <th scope="row">{{ propietario.id }}</th>
-            <td>{{ propietario.nombre }}</td>
-            <td>{{ propietario.apellido }}</td>
-            <td>{{ dict_doc[propietario.tipo_documento] }}</td>
-            <td>{{ propietario.numero_documento }}</td>
-            <td>{{ dict_genero[propietario.sexo] }}</td>
+          <tr v-for="(mascota, i) in filteredRows" :key="i">
+            <th scope="row">{{ mascota.id }}</th>
+            <td>{{ mascota.nombre }}</td>
+            <td>{{ mascota.sexo }}</td>
+            <td>{{ mascota.fecha_nacimiento}}</td>
+            <td>{{ mascota.raza }}</td>
             <td>
               <button
                 type="button"
@@ -82,7 +79,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">
-              Editar Propietario
+              Editar Mascota
             </h5>
             <button
               type="button"
@@ -184,24 +181,19 @@
         </div>
       </div>
     </div>
-
-      <p v-if="go" to="/mascotas">{{goMascotas()}}
-        </p>
-
   </div>
 </template>
 
 <script>
-import UserService from "../services/user.service";
-import Propietario from "../models/propietario";
+import MascotaService from "../services/mascota.service";
+import Mascota from "../models/mascota";
 export default {
-  name: "User",
+  name: "Mascota",
   data() {
     return {
-      go : false,
       filter: "",
       content: "",
-      propietarios: [],
+      mascotas: [],
       dict_genero: { 1: "F", 2: "M", 3: "F" },
       dict_doc: {
         1: "Cédula de ciudadanía",
@@ -209,42 +201,13 @@ export default {
         3: "Cédula de ciudadanía",
       },
       animales: "",
-      selected: new Propietario(),
+      selected: new Mascota(),
     };
   },
-  created() {
-    UserService.getPropietarios().then(
-      (response) => {
-        let info = response.data;
-        for (var a in info) {
-          this.propietarios.push(info[a]);
-        }
-        console.log(this.propietarios);
-      },
-      (error) => {
-        console.log("Pues hubo error socio" + error);
-      }
-    );
-  },
-  mounted() {
-    UserService.getUserBoard().then(
-      (response) => {
-        this.content = response.data;
-      },
-      (error) => {
-        this.content =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();
-      }
-    );
-  },
   methods: {
-    goMascotas(){
-      this.$router.push('/mascotas');
-    },
+
     PeticionPut() {
-      UserService.editarUsuario(this.selected).then(
+      MascotaService.editarUsuario(this.selected).then(
         (response) => {
           console.log("Exito editando" + response);
 
@@ -259,23 +222,21 @@ export default {
       );
     },
     ActualizarTabla() {
-      UserService.getPropietarios().then(
+      let id = localStorage.getItem('propietario').id
+      MascotaService.getMascotas(id).then(
         (response) => {
-          this.propietarios = response.data;
+          this.mascotas = response.data;
         },
         (error) => {
           console.log("Pues hubo error socio" + error);
         }
       );
     },
-    VerUsuario(i) {
-      UserService.getAnimales(this.propietarios[i].id).then(
+    VerMascota(i) {
+        //Pendiente para ver historia clínica
+      MascotaService.getMascotas(this.mascotas[i].id).then(
         (response) => {
-          localStorage.setItem('propietario',this.propietarios[i]);
-          localStorage.setItem('animales', JSON.stringify(response.data));
-          this.goMascotas();
           this.animales = response.data;
-                    console.log("respuesta posiitva");
         },
         (error) => {
           this.content =
@@ -285,8 +246,8 @@ export default {
         }
       );
     },
-    EliminarUsuario(i) {
-      UserService.deleteUsuario(this.propietarios[i].id).then(
+    EliminarMascota(i) {
+      MascotaService.deleteMascota(this.mascotas[i].id).then(
         (response) => {
           console.log(response);
         },
@@ -299,31 +260,19 @@ export default {
       );
     },
     EditarUsuario(i) {
-      //this.selected = this.propietarios[i];
       // asignación sin bindear
-      this.selected = Object.assign({}, this.propietarios[i]);
+      this.selected = Object.assign({}, this.mascotas[i]);
     },
   },
   computed: {
     filteredRows() {
-      return this.propietarios.filter((propietario) => {
-        const nombre = propietario.nombre.toString().toLowerCase();
-        const apellido = propietario.apellido.toString().toLowerCase();
-        const tipodocumento = propietario.tipo_documento
-          .toString()
-          .toLowerCase();
-        const numerodocumento = propietario.numero_documento
-          .toString()
-          .toLowerCase();
-        const genero = propietario.sexo.toString().toLowerCase();
+      return this.mascotas.filter((mascota) => {
+        const nombre = mascota.nombre.toString().toLowerCase();
+      
         const searchTerm = this.filter.toString().toLowerCase();
 
         return (
-          nombre.includes(searchTerm) ||
-          apellido.includes(searchTerm) ||
-          tipodocumento.includes(searchTerm) ||
-          numerodocumento.includes(searchTerm) ||
-          genero.includes(searchTerm)
+          nombre.includes(searchTerm)
         );
       });
     },
