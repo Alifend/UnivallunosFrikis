@@ -12,16 +12,16 @@
           <router-link to="/admin" class="nav-link">Admin</router-link>
         </li>
         <li v-if="showModeratorBoard" class="nav-item">
-          <router-link to="/mod" class="nav-link">Clientes</router-link>
+          <router-link to="/vet" class="nav-link">Clientes</router-link>
         </li>
         <li class="nav-item">
           <router-link v-if="currentUser" to="/user" class="nav-link">Perfil</router-link>
         </li>
       </div>
 
-        <p v-if="showModeratorBoard" to="/mod">{{goVet()}}
+        <p v-if="showModeratorBoard" to="/vet">{{goVet()}}
         </p>
-        <p v-if="showAdminBoard" to="/mod">{{goAdmin()}}
+        <p v-if="showAdminBoard" to="/vet">{{goAdmin()}}
         </p>
 
       <div v-if="!currentUser" class="navbar-nav ml-auto">
@@ -83,7 +83,7 @@ export default {
       this.$router.push('/admin')
     },
     goVet(){
-      this.$router.push('/mod')
+      this.$router.push('/vet')
     }
   }
 };

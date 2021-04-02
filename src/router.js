@@ -39,8 +39,8 @@ export const router = new Router({
       component: () => import('./views/BoardAdmin.vue')
     },
     {
-      path: '/mod',
-      name: 'moderator',
+      path: '/vet',
+      name: 'veterinario',
       // lazy-loaded
       component: () => import('./views/BoardModerator.vue')
     },

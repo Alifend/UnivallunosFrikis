@@ -1,11 +1,24 @@
 <template>
   <div>
-    <!-- Table -->
-    <div class="container">
-      <header class="jumbotron">
+    <!-- Header -->
+    <header class="jumbotron">
         <h1>Clientes</h1>
       </header>
 
+    <!-- Filter -->
+    <div>
+      <input
+        class="form-control"
+        id="myInput"
+        type="text"
+        placeholder="Search.."
+        v-model="filter"
+      />
+      <br />
+    </div>
+    
+    <!-- Table -->
+    <div class="container">
       <table class="table">
         <thead>
           <tr>
@@ -15,7 +28,7 @@
             <th scope="col">Tipo de documento</th>
             <th scope="col">Número de documento</th>
             <th scope="col">Genero</th>
-            <th scope="col">Acción</th>
+            <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -36,35 +49,27 @@
               </button>
               <button
                 type="button"
+                v-on:click="EditarUsuario(i)"
+                data-toggle="modal"
+                data-target="#exampleModal"
+                class="btn btn-info botoncito"
+              >
+                Editar
+              </button>
+              <button
+                type="button"
                 class="btn btn-danger botoncito"
                 v-on:click="EliminarUsuario(i)"
               >
                 Eliminar
               </button>
-              <button
-                type="button"
-                v-on:click="EditarUsuario(i)"
-                data-toggle="modal"
-                data-target="#exampleModal"
-                class="btn btn-secondary botoncito"
-              >
-                Editar
-              </button>
+              
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div>
-      <input
-        class="form-control"
-        id="myInput"
-        type="text"
-        placeholder="Search.."
-        v-model="filter"
-      />
-      <br />
-    </div>
+
     <!-- Modal -->
     <div
       class="modal fade"
@@ -181,9 +186,7 @@
       </div>
     </div>
 
-    <button type="button" v-on:click="Test()" class="btn btn-primary">
-      Test
-    </button>
+
   </div>
 </template>
 
