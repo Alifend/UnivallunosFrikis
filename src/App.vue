@@ -10,7 +10,7 @@
         </li>
         
         <li class="nav-item">
-          <router-link v-if="currentUser" to="/user" class="nav-link"
+          <router-link v-if="currentUser" to="/profile" class="nav-link"
             >Perfil</router-link
           >
         </li>
