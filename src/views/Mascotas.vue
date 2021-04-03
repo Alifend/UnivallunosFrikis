@@ -205,7 +205,6 @@ export default {
     };
   },
   created() {
-    this.mascotas= [];  
     let id =  JSON.parse(localStorage.getItem('propietario')).id
     console.log(id)
     console.log("akljsdlksajdlkasjdkasjdklj")
@@ -295,6 +294,8 @@ export default {
       });
     },
   },
+
+
 };
 </script>
 

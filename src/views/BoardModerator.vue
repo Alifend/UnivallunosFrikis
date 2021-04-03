@@ -32,10 +32,10 @@
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Apellido</th>
-            <th scope="col">Tipo de documento</th>
-            <th scope="col">Número de documento</th>
+            <th scope="col">Nombres</th>
+            <th scope="col">Apellidos</th>
+            <th scope="col">Documento</th>
+            <th scope="col">No. de documento</th>
             <th scope="col">Género</th>
             <th scope="col">Acciones</th>
           </tr>
@@ -303,7 +303,7 @@
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-              <option v-for="(doc, i) in tipos_docs" :key="i" :value=dict_doc[doc] >{{
+              <option v-for="(doc, i) in tipos_docs" :key="i" :value=i+1 >{{
                   doc
                 }}</option>
               </select>
@@ -366,7 +366,7 @@ export default {
   name: "User",
   data() {
     return {
-      tipos_docs : ["Cédula de ciudadanía","Tarjeta de Identidad"],
+      
       tipos_genero: ["F","M"],
       nuevo: new Propietario(),
       go: false,
@@ -375,11 +375,12 @@ export default {
       propietarios: [],
       dict_genero: { 1: "F", 2: "M" , "F": 1, "M" : 2 },
       dict_doc: {
-        1: "Cédula de ciudadanía",
-        2: "Tarjeta de Identidad",
-        "Cédula de ciudadanía": 1,
-        "Tarjeta de Identidad": 2
+        1: "C.C",
+        2: "T.I",
+        "C.C": 1,
+        "T.I": 2
       },
+      tipos_docs : ["C.C","T.I"],
       animales: "",
       selected: new Propietario(),
     };
@@ -501,21 +502,15 @@ export default {
       return this.propietarios.filter((propietario) => {
         const nombre = propietario.nombre.toString().toLowerCase();
         const apellido = propietario.apellido.toString().toLowerCase();
-        const tipodocumento = propietario.tipo_documento
-          .toString()
-          .toLowerCase();
         const numerodocumento = propietario.numero_documento
           .toString()
           .toLowerCase();
-        const genero = propietario.sexo.toString().toLowerCase();
         const searchTerm = this.filter.toString().toLowerCase();
 
         return (
           nombre.includes(searchTerm) ||
           apellido.includes(searchTerm) ||
-          tipodocumento.includes(searchTerm) ||
-          numerodocumento.includes(searchTerm) ||
-          genero.includes(searchTerm)
+          numerodocumento.includes(searchTerm)
         );
       });
     },
