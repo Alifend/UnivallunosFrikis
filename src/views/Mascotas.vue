@@ -201,25 +201,26 @@ export default {
         3: "Cédula de ciudadanía",
       },
       animales: "",
+      propietario : "",
       selected: new Mascota(),
     };
   },
   created() {
-    let id =  JSON.parse(localStorage.getItem('propietario')).id
-    console.log(id)
-    console.log("akljsdlksajdlkasjdkasjdklj")
-    MascotaService.getMascotas(id).then(
+    this.mascotas=[]
+    let prop =  JSON.parse(localStorage.getItem('propietario'))
+    localStorage.removeItem('propietario')
+    MascotaService.getMascotas(prop.id).then(
       (response) => {
         let info = response.data;
         for (var a in info) {
           this.mascotas.push(info[a]);
         }
+        
       },
       (error) => {
         console.log("Pues hubo error socio" + error);
       }
     );
-    this.ActualizarTabla();
   },  
   methods: {
     Test() {

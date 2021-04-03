@@ -4,8 +4,6 @@ const API_URL = 'https://khor.pythonanywhere.com/api/';
 
 class AuthService {
   login(user) {
-      console.log("pasé");
-      console.log(user)
     return axios
       .post(API_URL + 'iniciar_sesion/', {
         correo: user.correo,
