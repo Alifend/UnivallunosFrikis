@@ -5,6 +5,16 @@
       <h1>Mascotas</h1>
     </header>
 
+    <!-- Añadir -->
+    <button
+      type="button"
+      data-toggle="modal"
+      data-target="#modalAñadir"
+      class="añadir btn btn-success float-right"
+    >
+      + Añadir Mascota
+    </button>
+
     <!-- Filter -->
     <div>
       <input
@@ -292,6 +302,11 @@ export default {
 .botoncito {
   margin: 1%;
 }
+
+.añadir {
+  margin: 1%;
+}
+
 label {
   display: inline-block;
   text-align: right;
