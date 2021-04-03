@@ -70,7 +70,9 @@
               <button
                 type="button"
                 class="btn btn-danger botoncito"
-                v-on:click="EliminarUsuario(i)"
+                data-toggle="modal"
+                v-on:click="EditarUsuario(i)"
+                data-target="#eliminarModal"
               >
                 Eliminar
               </button>
@@ -80,7 +82,54 @@
       </table>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Eliminar -->
+    <div
+      class="modal fade"
+      id="eliminarModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="eliminarModalExample"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered  " role="document">
+        <div class="modal-content ">
+          <div class="modal-header ">
+            <h5 class="modal-title centrado" id="exampleModalLabel">
+              ¿Está seguro de borrar el usuario?
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body d-flex justify-content-center">
+            <button
+              type="button"
+              class="btn btn-danger botoncito"
+              v-on:click="EliminarUsuario(selected)"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Eliminar
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary botoncito"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Editar -->
     <div
       class="modal fade"
       id="exampleModal"
@@ -196,7 +245,7 @@
       </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Crear -->
     <div
       class="modal fade"
       id="modalAñadir"
@@ -427,10 +476,11 @@ export default {
       );
       this.$router.push("/mascotas");
     },
-    EliminarUsuario(i) {
-      UserService.deleteUsuario(this.propietarios[i].id).then(
+    EliminarUsuario(propietario) {
+      UserService.deleteUsuario(propietario.id).then(
         (response) => {
           console.log(response);
+          this.ActualizarTabla();
         },
         (error) => {
           this.content =
@@ -486,6 +536,12 @@ label {
   margin: 1%;
 }
 
-td {
+.centrado {
+  margin: auto;
+  margin-right: 0.5%;
+}
+
+.centrardiv {
+  margin: auto;
 }
 </style>
