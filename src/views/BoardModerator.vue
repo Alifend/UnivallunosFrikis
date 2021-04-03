@@ -416,7 +416,6 @@ export default {
       UserService.postPropietario(propietario).then(
         (response) => {
           console.log("Exito añadiendo" + response);
-
           this.ActualizarTabla();
           this.nuevo = new Propietario();
         },
@@ -457,7 +456,6 @@ export default {
       );
     },
     VerUsuario(i) {
-      localStorage.removeItem('propietario');
       UserService.getAnimales(this.propietarios[i].id).then(
         (response) => {
 
