@@ -8,16 +8,10 @@ class UserService {
     return axios.get(API_URL + 'all');
   }
 
-  postPropietario(){
+  postPropietario(propietario){
     console.log("entre a post")
     return axios.post(API_URL + 'propietario/',
-      {
-        nombre: 'Paola',
-        apellido: 'Roa',
-        sexo: 2,
-        tipo_documento: 2,
-        numero_documento: 2323232
-    }
+      propietario
     , { headers: authHeader() });
   }
 
