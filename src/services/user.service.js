@@ -9,6 +9,7 @@ class UserService {
   }
 
   postPropietario(){
+    console.log("entre a post")
     return axios.post(API_URL + 'propietario/',
       {
         nombre: 'Paola',
