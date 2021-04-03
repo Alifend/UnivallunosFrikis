@@ -21,7 +21,7 @@
         class="form-control"
         id="myInput"
         type="text"
-        placeholder="Search.."
+        placeholder="Buscar.."
         v-model="filter"
       />
     </div>
@@ -36,7 +36,7 @@
             <th scope="col">Apellido</th>
             <th scope="col">Tipo de documento</th>
             <th scope="col">Número de documento</th>
-            <th scope="col">Genero</th>
+            <th scope="col">Género</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
@@ -189,11 +189,8 @@
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-                <option selected value="selected.tipo_documento">{{
-                  dict_doc[selected.tipo_documento]
-                }}</option>
-                <option value="selected.tipo_documento">{{
-                  dict_doc[selected.tipo_documento + 1]
+              <option v-for="(doc, i) in tipos_docs" :key="i" :value=dict_doc[doc] >{{
+                  doc
                 }}</option>
               </select>
             </div>
@@ -214,13 +211,14 @@
               <label data-error="wrong" data-success="right" for="form3"
                 >Género</label
               >
-              <select
-                v-bind="selected.sexo"
+               <select
+                v-model="selected.sexo"
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-                <option selected>{{ dict_genero[selected.sexo] }}</option>
-                <option value="1">{{ dict_genero[selected.sexo + 1] }}</option>
+              <option v-for="(genero, i) in tipos_genero" :key="i" :value=dict_genero[genero] >{{
+                  genero
+                }}</option>
               </select>
             </div>
           </div>
@@ -305,11 +303,8 @@
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-                <option selected value="selected.tipo_documento">{{
-                  dict_doc[selected.tipo_documento]
-                }}</option>
-                <option value="selected.tipo_documento">{{
-                  dict_doc[selected.tipo_documento + 1]
+              <option v-for="(doc, i) in tipos_docs" :key="i" :value=dict_doc[doc] >{{
+                  doc
                 }}</option>
               </select>
             </div>
@@ -329,14 +324,15 @@
               <i class="fas fa-user prefix grey-text"></i>
               <label data-error="wrong" data-success="right" for="form3"
                 >Género</label
-              >
-              <select
-                v-bind="nuevo.sexo"
+              > 
+               <select
+                v-model="nuevo.sexo"
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-                <option selected>{{ dict_genero[selected.sexo] }}</option>
-                <option value="1">{{ dict_genero[selected.sexo + 1] }}</option>
+              <option v-for="(genero, i) in tipos_genero" :key="i" :value=dict_genero[genero] >{{
+                  genero
+                }}</option>
               </select>
             </div>
           </div>
@@ -350,7 +346,7 @@
             </button>
             <button
               type="button"
-              v-on:click="AñadirPropietario()"
+              v-on:click="AñadirPropietario(nuevo)"
               data-dismiss="modal"
               class="btn btn-primary"
             >
@@ -370,16 +366,19 @@ export default {
   name: "User",
   data() {
     return {
+      tipos_docs : ["Cédula de ciudadanía","Tarjeta de Identidad"],
+      tipos_genero: ["F","M"],
       nuevo: new Propietario(),
       go: false,
       filter: "",
       content: "",
       propietarios: [],
-      dict_genero: { 1: "F", 2: "M", 3: "F" },
+      dict_genero: { 1: "F", 2: "M" , "F": 1, "M" : 2 },
       dict_doc: {
         1: "Cédula de ciudadanía",
         2: "Tarjeta de Identidad",
-        3: "Cédula de ciudadanía",
+        "Cédula de ciudadanía": 1,
+        "Tarjeta de Identidad": 2
       },
       animales: "",
       selected: new Propietario(),
@@ -413,8 +412,8 @@ export default {
     );
   },
   methods: {
-    AñadirPropietario() {
-      UserService.postPropietario().then(
+    AñadirPropietario(propietario) {
+      UserService.postPropietario(propietario).then(
         (response) => {
           console.log("Exito añadiendo" + response);
 
@@ -458,8 +457,10 @@ export default {
       );
     },
     VerUsuario(i) {
+      localStorage.removeItem('propietario');
       UserService.getAnimales(this.propietarios[i].id).then(
         (response) => {
+
           localStorage.setItem(
             "propietario",
             JSON.stringify(this.propietarios[i])

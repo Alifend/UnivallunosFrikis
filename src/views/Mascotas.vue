@@ -195,8 +195,10 @@ export default {
     };
   },
   created() {
+    this.mascotas= [];  
     let id =  JSON.parse(localStorage.getItem('propietario')).id
-    
+    console.log(id)
+    console.log("akljsdlksajdlkasjdkasjdklj")
     MascotaService.getMascotas(id).then(
       (response) => {
         let info = response.data;
@@ -208,6 +210,7 @@ export default {
         console.log("Pues hubo error socio" + error);
       }
     );
+    this.ActualizarTabla();
   },  
   methods: {
     Test() {
