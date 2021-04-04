@@ -8,12 +8,18 @@
             <font-awesome-icon icon="home" /> Clientes
           </router-link>
         </li>
-        
-        <li class="nav-item">
-          <router-link v-if="currentUser" to="/profile" class="nav-link"
-            >Perfil</router-link
-          >
+        <li v-if="showAdminBoard" class="nav-item">
+          <router-link to="/admin" class="nav-link">
+            <font-awesome-icon icon="users-cog" /> Usuarios
+          </router-link>
         </li>
+        <li v-if="showAdminBoard" class="nav-item">
+          <router-link to="/vet" class="nav-link">
+            <font-awesome-icon icon="portrait" /> Clientes
+          </router-link>
+        </li>
+        
+        
       </div>
 
 
@@ -28,8 +34,8 @@
       <div v-if="currentUser" class="navbar-nav ml-auto">
         <li class="nav-item">
           <router-link to="/profile" class="nav-link">
-            <font-awesome-icon icon="user" />
-            {{ currentUser.username }}
+            <font-awesome-icon icon="address-card" />
+            {{ currentUser.nombre}}
           </router-link>
         </li>
         <li class="nav-item">
