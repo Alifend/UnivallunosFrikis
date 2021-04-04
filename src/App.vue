@@ -5,7 +5,7 @@
       <div class="navbar-nav mr-auto">
         <li v-if="showModeratorBoard" class="nav-item">
           <router-link to="/vet" class="nav-link">
-            <font-awesome-icon icon="home" /> Clientes
+            <font-awesome-icon icon="portrait" /> Clientes
           </router-link>
         </li>
         <li v-if="showAdminBoard" class="nav-item">

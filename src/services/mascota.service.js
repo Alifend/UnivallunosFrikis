@@ -9,6 +9,9 @@ class MascotaService {
     return axios.get(API_URL + 'propietario/'+id+'/mascota/', {headers:authHeader()});
   }
 
+  getRazas(id){
+    return axios.get(API_URL + 'especie/'+id+'/raza/', {headers:authHeader()});
+  }
   deleteMascota(id){
     return axios.delete(API_URL+ 'mascota/'+id, {headers:authHeader()});
   }

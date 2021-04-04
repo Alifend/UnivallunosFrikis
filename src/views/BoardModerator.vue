@@ -433,7 +433,7 @@ export default {
     PeticionPut() {
       UserService.editarUsuario(this.selected).then(
         (response) => {
-          console.log("Exito editando" + response);
+          console.log("Exito editando" + response.data);
 
           this.ActualizarTabla();
         },
@@ -449,6 +449,7 @@ export default {
       UserService.getPropietarios().then(
         (response) => {
           this.propietarios = response.data;
+          console.log(response.data)
         },
         (error) => {
           console.log("Pues hubo error socio" + error);

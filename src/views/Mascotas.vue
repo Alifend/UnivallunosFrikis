@@ -67,7 +67,9 @@
               <button
                 type="button"
                 class="btn btn-danger botoncito"
-                v-on:click="EliminarMascota(i)"
+                v-on:click="EditarMascota(i)"
+                data-toggle="modal"
+                data-target="#eliminarModal"
               >
                 Eliminar
               </button>
@@ -77,7 +79,7 @@
       </table>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Editar-->
     <div
       class="modal fade"
       id="exampleModal"
@@ -120,7 +122,7 @@
                 >Género</label
               >
               <select
-                v-bind="selected.sexo"
+                v-model="selected.sexo"
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
@@ -133,38 +135,55 @@
               <label data-error="wrong" data-success="right" for="form3"
                 >Fecha de Nacimiento</label
               >
-                <input
+              <input
                 type="date"
                 v-model="selected.fecha_nacimiento"
                 id="form3"
                 class="form-control validate"
               />
-
-              
             </div>
             <div class="md-form">
               <i class="fas fa-user prefix grey-text"></i>
               <label data-error="wrong" data-success="right" for="form3"
-                >Raza</label
+                >Especie</label
               >
               <select
-                v-bind="selected.raza"
+                v-model="especie"
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-                <option selected>{{ dict_genero[selected.sexo] }}</option>
-                <option value="1">{{ dict_genero[selected.sexo + 1] }}</option>
+              <option v-for="(especie, i) in especies" :key="i" :value=i+1 >{{
+                  especie
+                }}</option>
               </select>
+            </div>
+            <label data-error="wrong" data-success="right" for="form3"
+              >Raza</label
+            >
+            <div class="md-form cuadrado">
+              <i class="fas fa-user prefix grey-text"></i>
+
+              <select
+                v-model="raza"
+                class="form-control form-select-lg mb-3 col-sm-8"
+                aria-label=".form-select-lg example"
+              >
+                <option v-for="(raz, i) in razas" :key="i" :value=i+1 >{{
+                  raz
+                }}</option>
+              </select>
+
+              <button
+                type="button"
+                data-toggle="modal"
+                data-target="#razaModal"
+                class="añadir btn btn-success col-sm-4 pequeño"
+              >
+                + Añadir Raza
+              </button>
             </div>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
             <button
               type="button"
               v-on:click="PeticionPut()"
@@ -173,10 +192,127 @@
             >
               Save changes
             </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Modal Eliminar --> 
+    <div
+      class="modal fade"
+      id="eliminarModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="eliminarModalExample"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered  " role="document">
+        <div class="modal-content ">
+          <div class="modal-header ">
+            <h5 class="modal-title centrado" id="exampleModalLabel">
+              ¿Está seguro de borrar la mascota?
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body d-flex justify-content-center">
+            <button
+              type="button"
+              class="btn btn-danger botoncito"
+              v-on:click="EliminarUsuario(selected)"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Eliminar
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary botoncito"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Raza -->
+    <div
+      class="modal fade"
+      id="razaModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="eliminarModalExample"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered  " role="document">
+        <div class="modal-content ">
+          <div class="modal-header ">
+            <h5 class="modal-title centrado" id="exampleModalLabel">
+              Añadir Raza
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              v-on:click="AñadirRaza()"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body d-flex justify-content-center">
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Nombre:
+              </label>
+              <input
+                type="text"
+                v-model="raza"
+                id="form3"
+                class="form-control validate"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary botoncito"
+              v-on:click="CrearRaza(selected)"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Crear
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary botoncito"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <button type="button" v-on:click="Test()" class="btn btn-primary">
       Save changes
     </button>
@@ -190,7 +326,10 @@ export default {
   name: "Mascota",
   data() {
     return {
-      array: [{"hola":"como"}],
+      raza: "",
+      razas: [],
+      especie: "",
+      especies: ["Canino","Felino","Equino","Bovino","Porcino","Bovino"],
       filter: "",
       content: "",
       mascotas: [],
@@ -200,28 +339,27 @@ export default {
         2: "Tarjeta de Identidad",
         3: "Cédula de ciudadanía",
       },
+      
       animales: "",
-      propietario : "",
+      propietario: "",
       selected: new Mascota(),
     };
   },
   created() {
-    this.mascotas=[]
-    let prop =  JSON.parse(localStorage.getItem('propietario'))
-    localStorage.removeItem('propietario')
+    this.mascotas = [];
+    let prop = JSON.parse(localStorage.getItem("propietario"));
     MascotaService.getMascotas(prop.id).then(
       (response) => {
         let info = response.data;
         for (var a in info) {
           this.mascotas.push(info[a]);
         }
-        
       },
       (error) => {
         console.log("Pues hubo error socio" + error);
       }
     );
-  },  
+  },
   methods: {
     Test() {
       console.log(this.mascotas);
@@ -242,7 +380,7 @@ export default {
       );
     },
     ActualizarTabla() {
-    let id =  JSON.parse(localStorage.getItem('propietario')).id
+      let id = JSON.parse(localStorage.getItem("propietario")).id;
       MascotaService.getMascotas(id).then(
         (response) => {
           this.mascotas = response.data;
@@ -284,19 +422,37 @@ export default {
       this.selected = Object.assign({}, this.mascotas[i]);
     },
   },
+  watch: {
+    especie: function (val) {
+
+      MascotaService.getRazas(val).then(
+        (response) => {
+          this.razas= [];
+          for (let i = 0; i<response.data.length;i++){
+            this.razas.push(response.data[i].nombre)
+          }
+          console.log(this.razas);
+        },
+        (error) => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
+  },
   computed: {
     filteredRows() {
       return this.mascotas.filter((mascota) => {
         const nombre = mascota.nombre.toString().toLowerCase();
-        
+
         const searchTerm = this.filter.toString().toLowerCase();
 
         return nombre.includes(searchTerm);
       });
     },
   },
-
-
 };
 </script>
 
@@ -312,5 +468,15 @@ export default {
 label {
   display: inline-block;
   text-align: right;
+}
+
+.cuadrado {
+  display: flex;
+}
+
+.pequeño {
+  height: 77%;
+  width: 100%;
+  margin-top: 0%;
 }
 </style>
