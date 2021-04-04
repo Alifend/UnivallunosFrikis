@@ -126,8 +126,9 @@
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-                <option selected>{{ dict_genero[selected.sexo] }}</option>
-                <option value="1">{{ dict_genero[selected.sexo + 1] }}</option>
+               <option v-for="(gen, i) in generos" :key="i" :value=i+1 >{{
+                  gen
+                }}</option>
               </select>
             </div>
             <div class="md-form">
@@ -232,7 +233,7 @@
             <button
               type="button"
               class="btn btn-danger botoncito"
-              v-on:click="EliminarUsuario(selected)"
+              v-on:click="EliminarMascota(selected)"
               data-dismiss="modal"
               aria-label="Close"
             >
@@ -284,7 +285,7 @@
               </label>
               <input
                 type="text"
-                v-model="raza"
+                v-model="raza_nueva"
                 id="form3"
                 class="form-control validate"
               />
@@ -294,7 +295,7 @@
             <button
               type="button"
               class="btn btn-primary botoncito"
-              v-on:click="CrearRaza(selected)"
+              v-on:click="CrearRaza(raza_nueva,especie)"
               data-dismiss="modal"
               aria-label="Close"
             >
@@ -313,6 +314,8 @@
       </div>
     </div>
 
+    
+
     <button type="button" v-on:click="Test()" class="btn btn-primary">
       Save changes
     </button>
@@ -326,6 +329,8 @@ export default {
   name: "Mascota",
   data() {
     return {
+      raza_nueva: "",
+      ids:[],
       raza: "",
       razas: [],
       especie: "",
@@ -333,13 +338,7 @@ export default {
       filter: "",
       content: "",
       mascotas: [],
-      dict_genero: { 1: "F", 2: "M", 3: "F" },
-      dict_doc: {
-        1: "Cédula de ciudadanía",
-        2: "Tarjeta de Identidad",
-        3: "Cédula de ciudadanía",
-      },
-      
+      generos: ["F","M"],    
       animales: "",
       propietario: "",
       selected: new Mascota(),
@@ -361,10 +360,48 @@ export default {
     );
   },
   methods: {
+    ActualizarRazas(){
+      MascotaService.getRazas(this.especie).then(
+        (response) => {
+          this.razas= [];
+          this.ids=[];
+          for (let i = 0; i<response.data.length;i++){
+            this.razas.push(response.data[i].nombre)
+            this.ids.push(response.data[i].id)
+          }
+          console.log(this.razas);
+        },
+        (error) => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
+    CrearRaza(raza,especie){
+      this.raza_nueva=""
+      MascotaService.crearRaza(raza,especie).then(
+        (response) => {
+          console.log("Exito creando raza" + response);
+        },
+        (error) => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+
+      this.ActualizarRazas()
+    
+    },
     Test() {
       console.log(this.mascotas);
     },
     PeticionPut() {
+      this.selected.raza=this.ids[this.raza]
+      this.selected.especie=this.especie
       MascotaService.editarMascota(this.selected).then(
         (response) => {
           console.log("Exito editando" + response);
@@ -428,8 +465,10 @@ export default {
       MascotaService.getRazas(val).then(
         (response) => {
           this.razas= [];
+          this.ids=[];
           for (let i = 0; i<response.data.length;i++){
             this.razas.push(response.data[i].nombre)
+            this.ids.push(response.data[i].id)
           }
           console.log(this.razas);
         },

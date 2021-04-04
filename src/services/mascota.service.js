@@ -16,6 +16,13 @@ class MascotaService {
     return axios.delete(API_URL+ 'mascota/'+id, {headers:authHeader()});
   }
 
+  crearRaza(raza,especie){
+    return axios.post(API_URL+ 'especie/'+especie+"/raza/",{
+      'especie' : especie ,
+      'nombre' : raza
+    } ,{headers:authHeader()});
+  }
+
   createMascota(mascota){
     return axios.post(API_URL+ 'mascota/',mascota ,{headers:authHeader()});
   }
