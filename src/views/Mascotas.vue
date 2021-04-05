@@ -153,8 +153,8 @@
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-              <option v-for="(especie, i) in dict_especies" :key="i" :value=dict_especies[i] >{{
-                  dict_especie[i]
+              <option v-for="(especie, i) in especies" :key="i" :value=i+1 >{{
+                  especie
                 }}</option>
               </select>
             </div>
@@ -334,12 +334,7 @@ export default {
       raza: "",
       razas: [],
       especie: "",
-      especies: ["Canino","Felino","Equino","Bovino","Porcino"],
-      dict_especies: {
-        "Canino" : 1, 1: "Canino", "Felino": 2, 2 :"Felino",
-        "Equino" : 3, 3 : "Equino", "Bovino" : 6, 4 :"Bovino",
-        "Porcino" : 5, 5 : "Porcino"
-      },
+      especies: ["Canino","Felino","Equino","Bovino","Porcino","Bovino"],
       filter: "",
       content: "",
       mascotas: [],
@@ -467,7 +462,7 @@ export default {
   watch: {
     especie: function (val) {
 
-      MascotaService.getRazas(this.dict_especies[val]).then(
+      MascotaService.getRazas(val).then(
         (response) => {
           this.razas= [];
           this.ids=[];
