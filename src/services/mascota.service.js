@@ -23,6 +23,10 @@ class MascotaService {
     } ,{headers:authHeader()});
   }
 
+  deleteRaza(id){
+    return axios.delete(API_URL+ 'raza/'+id+'/', {headers:authHeader()});
+  }
+
   createMascota(mascota){
     return axios.post(API_URL+ 'mascota/',mascota ,{headers:authHeader()});
   }

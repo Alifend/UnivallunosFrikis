@@ -46,7 +46,7 @@
             <td>{{ mascota.nombre }}</td>
             <td>{{ mascota.sexo }}</td>
             <td>{{ mascota.fecha_nacimiento }}</td>
-            <td>{{ mascota.raza }}</td>
+            <td>{{ razas }}</td>
             <td>
               <button
                 type="button"
@@ -126,7 +126,7 @@
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-               <option v-for="(gen, i) in generos" :key="i" :value=i+1 >{{
+                <option v-for="(gen, i) in generos" :key="i" :value="i + 1">{{
                   gen
                 }}</option>
               </select>
@@ -153,9 +153,12 @@
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-              <option v-for="(especie, i) in especies" :key="i" :value=i+1 >{{
-                  especie
-                }}</option>
+                <option
+                  v-for="(especie, i) in especies"
+                  :key="i"
+                  :value="i + 1"
+                  >{{ especie }}</option
+                >
               </select>
             </div>
             <label data-error="wrong" data-success="right" for="form3"
@@ -166,10 +169,10 @@
 
               <select
                 v-model="raza"
-                class="form-control form-select-lg mb-3 col-sm-8"
+                class="form-control form-select-lg mb-3 col-sm-6  "
                 aria-label=".form-select-lg example"
               >
-                <option v-for="(raz, i) in razas" :key="i" :value=i+1 >{{
+                <option v-for="(raz, i) in razas" :key="i" :value="i + 1">{{
                   raz
                 }}</option>
               </select>
@@ -178,9 +181,20 @@
                 type="button"
                 data-toggle="modal"
                 data-target="#razaModal"
-                class="añadir btn btn-success col-sm-4 pequeño"
+                class="añadir btn btn-success botoncito col-sm-3 pequeño"
               >
-                + Añadir Raza
+                Añadir
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-danger botoncito pequeño col-sm-3"
+                data-toggle="modal"
+                data-target="#eliminarrazaModal"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                Eliminar
               </button>
             </div>
           </div>
@@ -205,7 +219,7 @@
       </div>
     </div>
 
-    <!-- Modal Eliminar --> 
+    <!-- Modal Eliminar -->
     <div
       class="modal fade"
       id="eliminarModal"
@@ -234,6 +248,53 @@
               type="button"
               class="btn btn-danger botoncito"
               v-on:click="EliminarMascota(selected)"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Eliminar
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary botoncito"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Eliminar -->
+    <div
+      class="modal fade"
+      id="eliminarrazaModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="eliminarModalExample"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered  " role="document">
+        <div class="modal-content ">
+          <div class="modal-header ">
+            <h5 class="modal-title centrado" id="exampleModalLabel">
+              ¿Está seguro de borrar la raza?
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body d-flex justify-content-center">
+            <button
+              type="button"
+              class="btn btn-danger botoncito"
+              v-on:click="EliminarRaza(raza)"
               data-dismiss="modal"
               aria-label="Close"
             >
@@ -295,7 +356,7 @@
             <button
               type="button"
               class="btn btn-primary botoncito"
-              v-on:click="CrearRaza(raza_nueva,especie)"
+              v-on:click="CrearRaza(raza_nueva, especie)"
               data-dismiss="modal"
               aria-label="Close"
             >
@@ -314,8 +375,6 @@
       </div>
     </div>
 
-    
-
     <button type="button" v-on:click="Test()" class="btn btn-primary">
       Save changes
     </button>
@@ -330,15 +389,15 @@ export default {
   data() {
     return {
       raza_nueva: "",
-      ids:[],
+      ids: [],
       raza: "",
       razas: [],
       especie: "",
-      especies: ["Canino","Felino","Equino","Bovino","Porcino","Bovino"],
+      especies: ["Canino", "Felino", "Equino", "Bovino", "Porcino"],
       filter: "",
       content: "",
       mascotas: [],
-      generos: ["F","M"],    
+      generos: ["F", "M"],
       animales: "",
       propietario: "",
       selected: new Mascota(),
@@ -360,14 +419,34 @@ export default {
     );
   },
   methods: {
-    ActualizarRazas(){
+    EliminarRaza(raza) {
+      let id = this.ids[raza-1];
+      console.log(this.ids);
+      console.log(raza)
+      console.log("klasjdklsajdkasj");
+      MascotaService.deleteRaza(id).then(
+        (response) => {
+          console.log(response);
+          this.ActualizarRazas();
+        },
+        (error) => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+      this.ActualizarRazas();
+      this.raza="";
+    },
+    ActualizarRazas() {
       MascotaService.getRazas(this.especie).then(
         (response) => {
-          this.razas= [];
-          this.ids=[];
-          for (let i = 0; i<response.data.length;i++){
-            this.razas.push(response.data[i].nombre)
-            this.ids.push(response.data[i].id)
+          this.razas = [];
+          this.ids = [];
+          for (let i = 0; i < response.data.length; i++) {
+            this.razas.push(response.data[i].nombre);
+            this.ids.push(response.data[i].id);
           }
           console.log(this.razas);
         },
@@ -379,9 +458,9 @@ export default {
         }
       );
     },
-    CrearRaza(raza,especie){
-      this.raza_nueva=""
-      MascotaService.crearRaza(raza,especie).then(
+    CrearRaza(raza, especie) {
+      this.raza_nueva = "";
+      MascotaService.crearRaza(raza, especie).then(
         (response) => {
           console.log("Exito creando raza" + response);
         },
@@ -393,15 +472,15 @@ export default {
         }
       );
 
-      this.ActualizarRazas()
-    
+      this.ActualizarRazas();
     },
     Test() {
       console.log(this.mascotas);
     },
     PeticionPut() {
-      this.selected.raza=this.ids[this.raza]
-      this.selected.especie=this.especie
+      console.log();
+      this.selected.raza = this.ids[this.raza];
+      this.selected.especie = this.especie;
       MascotaService.editarMascota(this.selected).then(
         (response) => {
           console.log("Exito editando" + response);
@@ -460,15 +539,14 @@ export default {
     },
   },
   watch: {
-    especie: function (val) {
-
+    especie: function(val) {
       MascotaService.getRazas(val).then(
         (response) => {
-          this.razas= [];
-          this.ids=[];
-          for (let i = 0; i<response.data.length;i++){
-            this.razas.push(response.data[i].nombre)
-            this.ids.push(response.data[i].id)
+          this.razas = [];
+          this.ids = [];
+          for (let i = 0; i < response.data.length; i++) {
+            this.razas.push(response.data[i].nombre);
+            this.ids.push(response.data[i].id);
           }
           console.log(this.razas);
         },
