@@ -36,6 +36,7 @@
             <th scope="col">Nombre</th>
             <th scope="col">Sexo</th>
             <th scope="col">Fecha de Nacimiento</th>
+            <th scope="col">Especie</th>
             <th scope="col">Raza</th>
             <th scope="col">Acciones</th>
           </tr>
@@ -46,7 +47,8 @@
             <td>{{ mascota.nombre }}</td>
             <td>{{ mascota.sexo }}</td>
             <td>{{ mascota.fecha_nacimiento }}</td>
-            <td>{{ razas }}</td>
+            <td>{{ mascota.nombre_especie }}</td>
+            <td>{{ mascota.nombre_raza }}</td>
             <td>
               <button
                 type="button"
@@ -390,6 +392,7 @@ export default {
     return {
       raza_nueva: "",
       ids: [],
+      temporal: "",
       raza: "",
       razas: [],
       especie: "",
@@ -417,12 +420,14 @@ export default {
         console.log("Pues hubo error socio" + error);
       }
     );
+
+    this.ActualizarTabla();
   },
   methods: {
     EliminarRaza(raza) {
-      let id = this.ids[raza-1];
+      let id = this.ids[raza - 1];
       console.log(this.ids);
-      console.log(raza)
+      console.log(raza);
       console.log("klasjdklsajdkasj");
       MascotaService.deleteRaza(id).then(
         (response) => {
@@ -437,7 +442,7 @@ export default {
         }
       );
       this.ActualizarRazas();
-      this.raza="";
+      this.raza = "";
     },
     ActualizarRazas() {
       MascotaService.getRazas(this.especie).then(
@@ -497,15 +502,47 @@ export default {
     },
     ActualizarTabla() {
       let id = JSON.parse(localStorage.getItem("propietario")).id;
+
       MascotaService.getMascotas(id).then(
         (response) => {
           this.mascotas = response.data;
+          console.log(response.data);
+
+          MascotaService.getRacitas().then(
+            (response) => {
+              console.log(response.data);
+
+              for (var j=0;j<this.mascotas.length;j++) {
+                for (var i=0; i < response.data.length; i++) {
+
+                  if (this.mascotas[j].raza == response.data[i].id){
+                  this.mascotas[j].nombre_raza = response.data[i].nombre;
+                  this.mascotas[j].nombre_especie = this.especies[response.data[i].especie + 1];
+                  }
+                }
+              }
+              console.log(this.mascotas)
+
+              //mascota.numero_especie= raza.especie
+            },
+            (error) => {
+              console.log("Pues hubo error socio" + error);
+            }
+          );
         },
         (error) => {
           console.log("Pues hubo error socio" + error);
         }
       );
+
+      //todo.mascota.nombre_raza =raza.nombre
+      //mascota.nombre_especie= this.especies[raza.especie+1]
+      //mascota.numero_especie= raza.especie
+
+      //this.mascotas = todo
+      console.log(this.mascotas);
     },
+
     VerMascota(i) {
       //Pendiente para ver historia clínica
       MascotaService.getMascotas(this.mascotas[i].id).then(
