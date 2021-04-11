@@ -9,6 +9,10 @@ class HistoriaService{
     getHistorias(id){
         return axios.get(API_URL + 'mascota/'+id+'/historia_clinica/', { headers: authHeader() });
     }
+    editarHistoria(id,historia){
+        return axios.put(API_URL + 'mascota/'+id+'/historia_clinica/',historia, { headers: authHeader() });
+        
+    }
 }
 
 export default new HistoriaService();

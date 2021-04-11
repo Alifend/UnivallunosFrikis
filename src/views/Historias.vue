@@ -26,15 +26,6 @@
               </button>
               <button
                 type="button"
-                v-on:click="EditarMascota(i)"
-                data-toggle="modal"
-                data-target="#exampleModal"
-                class="btn btn-info botoncito"
-              >
-                Editar
-              </button>
-              <button
-                type="button"
                 class="btn btn-danger botoncito"
                 v-on:click="EditarMascota(i)"
                 data-toggle="modal"
@@ -83,7 +74,6 @@
                 id="form3"
                 class="form-control validate"
                 rows="7"
-                readonly
               ></textarea>
             </div>
             <div class="md-form">
@@ -98,23 +88,127 @@
                 v-model="selected.diagnostico"
                 id="exampleFormControlTextarea1"
                 rows="7"
-                readonly
               ></textarea>
-            </div>
+            </div>  
           </div>
-
+          
           <div class="modal-footer">
+            <button
+              type="button"
+              data-toggle="modal"
+              data-target="#confirmarModal"
+              class="btn btn-primary"
+            >
+              Guardar cambios
+            </button>
             <button
               type="button"
               class="btn btn-secondary"
               data-dismiss="modal"
             >
-              Close
+              Cerrar
             </button>
           </div>
         </div>
       </div>
     </div>
+
+
+     <!-- Modal Confirmación -->
+    <div
+      class="modal fade"
+      id="confirmarModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="confirmarExample"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered  " role="document">
+        <div class="modal-content ">
+          <div class="modal-header ">
+            <h5 class="modal-title centrado" id="exampleModalLabel">
+              ¿Está seguro de guardar el cambio?
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body d-flex justify-content-center">
+            <button
+              type="button"
+              class="btn btn-primary botoncito"
+              v-on:click="EditarHistoria(selected)"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Guardar cambios
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary botoncito"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Eliminar -->
+    <div
+      class="modal fade"
+      id="eliminarModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="eliminarExample"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered  " role="document">
+        <div class="modal-content ">
+          <div class="modal-header ">
+            <h5 class="modal-title centrado" id="exampleModalLabel">
+              ¿Está seguro de eliminar la historia?
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body d-flex justify-content-center">
+            <button
+              type="button"
+              class="btn btn-danger botoncito"
+              v-on:click="EliminarHistoria(selected)"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Eliminar
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary botoncito"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
   </div>
 </template>
 
@@ -148,6 +242,27 @@ export default {
     VerDetalle(i) {
       this.selected = Object.assign({}, this.historias[i]);
     },
+    EditarHistoria(){
+      HistoriaService.editarHistoria(this.selected.id,this.selected).then(
+        (response) => {
+          console.log(response);
+          this.ActualizarHistorias();
+        },
+        (error) => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
+    ActualizarHistorias(){
+
+    },
+    EliminarHistoria(){
+
+    }
+
   },
 };
 </script>
@@ -155,5 +270,10 @@ export default {
 <style scoped>
 .botoncito {
   margin: 1%;
+}
+
+.centrado {
+  margin: auto;
+  margin-right: 0.5%;
 }
 </style>

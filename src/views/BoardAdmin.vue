@@ -1,9 +1,13 @@
 <template>
   <div class="container">
-    <header class="jumbotron">
-      <h1>Administrador</h1>
-    </header>
-    <h1>Soy admin</h1>
+    <header class="jumbotron"></header>
+
+    <div>
+      <div v-if="showAdminBoard" class="nav-item">
+        <Register>
+        </Register>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -29,6 +33,17 @@ export default {
           error.toString();
       }
     );
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 1;
+      }
+      return false;
+    },
   },
 };
 </script>

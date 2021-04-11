@@ -174,6 +174,7 @@
                 v-model="selected.raza"
                 class="form-control form-select-lg mb-3 col-sm-6  "
                 aria-label=".form-select-lg example"
+                :disabled="selectedEspecie"
               >
                 <option v-for="(raz, i) in razas" :key="i" :value="ids[i]">{{
                   raz
@@ -196,6 +197,7 @@
                 data-target="#eliminarrazaModal"
                 data-dismiss="modal"
                 aria-label="Close"
+                :disabled="selectedEspecie"
               >
                 Eliminar
               </button>
@@ -586,6 +588,7 @@ export default {
       this.selected.sexo = "";
       this.selected.fecha_nacimiento = "";
       this.selected.raza = "";
+      this.selected.numero_especie= 0
       let id = JSON.parse(localStorage.getItem('propietario')).id
       this.selected.propietario=id
     },
@@ -782,6 +785,11 @@ export default {
         return nombre.includes(searchTerm);
       });
     },
+    selectedEspecie: function () {
+      return (this.selected.numero_especie == undefined) ? true : false;
+    },
+
+
   },
 };
 </script>
