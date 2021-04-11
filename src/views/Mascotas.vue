@@ -46,7 +46,7 @@
           <tr v-for="(mascota, i) in filteredRows" :key="i">
             <th scope="row">{{ mascota.id }}</th>
             <td>{{ mascota.nombre }}</td>
-            <td>{{ generos[mascota.sexo-1] }}</td>
+            <td>{{ generos[mascota.sexo - 1] }}</td>
             <td>{{ mascota.fecha_nacimiento }}</td>
             <td>{{ mascota.nombre_especie }}</td>
             <td>{{ mascota.nombre_raza }}</td>
@@ -174,7 +174,7 @@
                 v-model="selected.raza"
                 class="form-control form-select-lg mb-3 col-sm-6  "
                 aria-label=".form-select-lg example"
-                :disabled="selectedEspecie"
+                :disabled="mostrar"
               >
                 <option v-for="(raz, i) in razas" :key="i" :value="ids[i]">{{
                   raz
@@ -197,7 +197,7 @@
                 data-target="#eliminarrazaModal"
                 data-dismiss="modal"
                 aria-label="Close"
-                :disabled="selectedEspecie"
+                :disabled="mostrar"
               >
                 Eliminar
               </button>
@@ -533,6 +533,7 @@ export default {
   name: "Mascota",
   data() {
     return {
+      mostrar: false,
       nuevo: "",
       raza_nueva: "",
       ids: [],
@@ -567,12 +568,10 @@ export default {
     );
   },
   methods: {
-
-    AñadirMascota(){
+    AñadirMascota() {
       MascotaService.createMascota(this.selected).then(
         (response) => {
-
-          this.ActualizarTabla()
+          this.ActualizarTabla();
           console.log(response);
         },
         (error) => {
@@ -588,9 +587,9 @@ export default {
       this.selected.sexo = "";
       this.selected.fecha_nacimiento = "";
       this.selected.raza = "";
-      this.selected.numero_especie= 0
-      let id = JSON.parse(localStorage.getItem('propietario')).id
-      this.selected.propietario=id
+      this.selected.numero_especie = undefined;
+      let id = JSON.parse(localStorage.getItem("propietario")).id;
+      this.selected.propietario = id;
     },
     EliminarRaza() {
       console.log("klasjdklsajdkasj");
@@ -716,11 +715,8 @@ export default {
       //Pendiente para ver historia clínica
       MascotaService.getHistoriasClinicas(this.mascotas[i].id).then(
         (response) => {
-          console.log(response)
-         localStorage.setItem(
-            'mascota',
-            JSON.stringify(this.mascotas[i])
-          );
+          console.log(response);
+          localStorage.setItem("mascota", JSON.stringify(this.mascotas[i]));
           this.$router.push("/historias_clinicas");
         },
         (error) => {
@@ -735,7 +731,7 @@ export default {
       MascotaService.deleteMascota(i.id).then(
         (response) => {
           console.log(response);
-          this.ActualizarTabla()
+          this.ActualizarTabla();
         },
         (error) => {
           this.content =
@@ -744,7 +740,6 @@ export default {
             error.toString();
         }
       );
-
     },
     EditarMascota(i) {
       // asignación sin bindear
@@ -754,23 +749,34 @@ export default {
   watch: {
     selected: {
       handler: function(val) {
-        MascotaService.getRazas(val.numero_especie).then(
-          (response) => {
-            this.razas = [];
-            this.ids = [];
-            for (let i = 0; i < response.data.length; i++) {
-              this.razas.push(response.data[i].nombre);
-              this.ids.push(response.data[i].id);
+        console.log("holaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        if (this.selected.numero_especie == undefined) {
+          console.log("I'm in")
+          this.mostrar = true;
+          this.razas = [];
+          this.ids = [];
+        } else {
+          console.log("I'm out")
+          this.mostrar = false;
+
+          MascotaService.getRazas(val.numero_especie).then(
+            (response) => {
+              this.razas = [];
+              this.ids = [];
+              for (let i = 0; i < response.data.length; i++) {
+                this.razas.push(response.data[i].nombre);
+                this.ids.push(response.data[i].id);
+              }
+              console.log(this.razas);
+            },
+            (error) => {
+              this.content =
+                (error.response && error.response.data) ||
+                error.message ||
+                error.toString();
             }
-            console.log(this.razas);
-          },
-          (error) => {
-            this.content =
-              (error.response && error.response.data) ||
-              error.message ||
-              error.toString();
-          }
-        );
+          );
+        }
       },
       deep: true,
     },
@@ -785,10 +791,6 @@ export default {
         return nombre.includes(searchTerm);
       });
     },
-    selectedEspecie: function () {
-      return (this.selected.numero_especie == undefined) ? true : false;
-    },
-
 
   },
 };
