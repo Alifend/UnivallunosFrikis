@@ -583,11 +583,11 @@ export default {
       );
     },
     SetearSelected() {
+      this.EditarMascota()
       this.selected.nombre = "";
       this.selected.sexo = "";
       this.selected.fecha_nacimiento = "";
       this.selected.raza = "";
-      this.selected.numero_especie = undefined;
       let id = JSON.parse(localStorage.getItem("propietario")).id;
       this.selected.propietario = id;
     },
@@ -743,6 +743,7 @@ export default {
     },
     EditarMascota(i) {
       // asignación sin bindear
+      console.log(i, "oh");
       this.selected = Object.assign({}, this.mascotas[i]);
     },
   },
