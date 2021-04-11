@@ -9,6 +9,7 @@
     <button
       type="button"
       data-toggle="modal"
+      v-on:click="SetearSelected()"
       data-target="#modalAñadir"
       class="añadir btn btn-success float-right"
     >
@@ -45,7 +46,7 @@
           <tr v-for="(mascota, i) in filteredRows" :key="i">
             <th scope="row">{{ mascota.id }}</th>
             <td>{{ mascota.nombre }}</td>
-            <td>{{ mascota.sexo }}</td>
+            <td>{{ generos[mascota.sexo-1] }}</td>
             <td>{{ mascota.fecha_nacimiento }}</td>
             <td>{{ mascota.nombre_especie }}</td>
             <td>{{ mascota.nombre_raza }}</td>
@@ -79,6 +80,146 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Modal Crear -->
+    <div
+      class="modal fade"
+      id="modalAñadir"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="modalAñadir"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Crear Mascota
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body ">
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Nombre:
+              </label>
+              <input
+                type="text"
+                v-model="selected.nombre"
+                id="form3"
+                class="form-control validate"
+              />
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Género</label
+              >
+              <select
+                v-model="selected.sexo"
+                class="form-control form-select-lg mb-3"
+                aria-label=".form-select-lg example"
+              >
+                <option v-for="(gen, i) in generos" :key="i" :value="i + 1">{{
+                  gen
+                }}</option>
+              </select>
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Fecha de Nacimiento</label
+              >
+              <input
+                type="date"
+                v-model="selected.fecha_nacimiento"
+                id="form3"
+                class="form-control validate"
+              />
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Especie</label
+              >
+              <select
+                v-model="selected.numero_especie"
+                class="form-control form-select-lg mb-3"
+                aria-label=".form-select-lg example"
+              >
+                <option
+                  v-for="(especie, i) in especies"
+                  :key="i"
+                  :value="i + 1"
+                  >{{ especie }}</option
+                >
+              </select>
+            </div>
+            <label data-error="wrong" data-success="right" for="form3"
+              >Raza</label
+            >
+            <div class="md-form cuadrado">
+              <i class="fas fa-user prefix grey-text"></i>
+
+              <select
+                v-model="selected.raza"
+                class="form-control form-select-lg mb-3 col-sm-6  "
+                aria-label=".form-select-lg example"
+              >
+                <option v-for="(raz, i) in razas" :key="i" :value="ids[i]">{{
+                  raz
+                }}</option>
+              </select>
+
+              <button
+                type="button"
+                data-toggle="modal"
+                data-target="#razaModal"
+                class="añadir btn btn-success botoncito col-sm-3 pequeño"
+              >
+                Añadir
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-danger botoncito pequeño col-sm-3"
+                data-toggle="modal"
+                data-target="#eliminarrazaModal"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              v-on:click="AñadirMascota()"
+              data-dismiss="modal"
+              class="btn btn-primary"
+            >
+              Save changes
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Modal Editar-->
@@ -151,7 +292,7 @@
                 >Especie</label
               >
               <select
-                v-model="especie"
+                v-model="selected.numero_especie"
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
@@ -170,11 +311,11 @@
               <i class="fas fa-user prefix grey-text"></i>
 
               <select
-                v-model="raza"
+                v-model="selected.raza"
                 class="form-control form-select-lg mb-3 col-sm-6  "
                 aria-label=".form-select-lg example"
               >
-                <option v-for="(raz, i) in razas" :key="i" :value="i + 1">{{
+                <option v-for="(raz, i) in razas" :key="i" :value="ids[i]">{{
                   raz
                 }}</option>
               </select>
@@ -268,7 +409,7 @@
       </div>
     </div>
 
-    <!-- Modal Eliminar -->
+    <!-- Modal Eliminar Raza -->
     <div
       class="modal fade"
       id="eliminarrazaModal"
@@ -296,7 +437,7 @@
             <button
               type="button"
               class="btn btn-danger botoncito"
-              v-on:click="EliminarRaza(raza)"
+              v-on:click="EliminarRaza()"
               data-dismiss="modal"
               aria-label="Close"
             >
@@ -390,6 +531,7 @@ export default {
   name: "Mascota",
   data() {
     return {
+      nuevo: "",
       raza_nueva: "",
       ids: [],
       temporal: "",
@@ -415,21 +557,41 @@ export default {
         for (var a in info) {
           this.mascotas.push(info[a]);
         }
+        this.ActualizarTabla();
       },
       (error) => {
         console.log("Pues hubo error socio" + error);
       }
     );
-
-    this.ActualizarTabla();
   },
   methods: {
-    EliminarRaza(raza) {
-      let id = this.ids[raza - 1];
-      console.log(this.ids);
-      console.log(raza);
+
+    AñadirMascota(){
+      MascotaService.createMascota(this.selected).then(
+        (response) => {
+
+          this.ActualizarTabla()
+          console.log(response);
+        },
+        (error) => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
+    SetearSelected() {
+      this.selected.nombre = "";
+      this.selected.sexo = "";
+      this.selected.fecha_nacimiento = "";
+      this.selected.raza = "";
+      let id = JSON.parse(localStorage.getItem('propietario')).id
+      this.selected.propietario=id
+    },
+    EliminarRaza() {
       console.log("klasjdklsajdkasj");
-      MascotaService.deleteRaza(id).then(
+      MascotaService.deleteRaza(this.selected.raza).then(
         (response) => {
           console.log(response);
           this.ActualizarRazas();
@@ -445,7 +607,7 @@ export default {
       this.raza = "";
     },
     ActualizarRazas() {
-      MascotaService.getRazas(this.especie).then(
+      MascotaService.getRazas(this.selected.numero_especie).then(
         (response) => {
           this.razas = [];
           this.ids = [];
@@ -463,11 +625,14 @@ export default {
         }
       );
     },
-    CrearRaza(raza, especie) {
+    CrearRaza(raza) {
       this.raza_nueva = "";
-      MascotaService.crearRaza(raza, especie).then(
+      MascotaService.crearRaza(raza, this.selected.numero_especie).then(
         (response) => {
           console.log("Exito creando raza" + response);
+          //let temp = this.selected
+          //this.selected = 0
+          //this.selected = temp
         },
         (error) => {
           this.content =
@@ -484,7 +649,7 @@ export default {
     },
     PeticionPut() {
       console.log();
-      this.selected.raza = this.ids[this.raza];
+
       this.selected.especie = this.especie;
       MascotaService.editarMascota(this.selected).then(
         (response) => {
@@ -502,26 +667,28 @@ export default {
     },
     ActualizarTabla() {
       let id = JSON.parse(localStorage.getItem("propietario")).id;
-
+      let todo = [];
       MascotaService.getMascotas(id).then(
         (response) => {
-          this.mascotas = response.data;
-          console.log(response.data);
+          //this.mascotas
+          todo = response.data;
 
           MascotaService.getRacitas().then(
             (response) => {
               console.log(response.data);
 
-              for (var j=0;j<this.mascotas.length;j++) {
-                for (var i=0; i < response.data.length; i++) {
-
-                  if (this.mascotas[j].raza == response.data[i].id){
-                  this.mascotas[j].nombre_raza = response.data[i].nombre;
-                  this.mascotas[j].nombre_especie = this.especies[response.data[i].especie + 1];
+              for (var j = 0; j < todo.length; j++) {
+                for (var i = 0; i < response.data.length; i++) {
+                  if (todo[j].raza == response.data[i].id) {
+                    todo[j].nombre_raza = response.data[i].nombre;
+                    todo[j].nombre_especie = this.especies[
+                      response.data[i].especie - 1
+                    ];
+                    todo[j].numero_especie = response.data[i].especie;
                   }
                 }
               }
-              console.log(this.mascotas)
+              this.mascotas = todo;
 
               //mascota.numero_especie= raza.especie
             },
@@ -539,7 +706,6 @@ export default {
       //mascota.nombre_especie= this.especies[raza.especie+1]
       //mascota.numero_especie= raza.especie
 
-      //this.mascotas = todo
       console.log(this.mascotas);
     },
 
@@ -558,9 +724,10 @@ export default {
       );
     },
     EliminarMascota(i) {
-      MascotaService.deleteMascota(this.mascotas[i].id).then(
+      MascotaService.deleteMascota(i.id).then(
         (response) => {
           console.log(response);
+          this.ActualizarTabla()
         },
         (error) => {
           this.content =
@@ -569,6 +736,7 @@ export default {
             error.toString();
         }
       );
+
     },
     EditarMascota(i) {
       // asignación sin bindear
@@ -576,24 +744,27 @@ export default {
     },
   },
   watch: {
-    especie: function(val) {
-      MascotaService.getRazas(val).then(
-        (response) => {
-          this.razas = [];
-          this.ids = [];
-          for (let i = 0; i < response.data.length; i++) {
-            this.razas.push(response.data[i].nombre);
-            this.ids.push(response.data[i].id);
+    selected: {
+      handler: function(val) {
+        MascotaService.getRazas(val.numero_especie).then(
+          (response) => {
+            this.razas = [];
+            this.ids = [];
+            for (let i = 0; i < response.data.length; i++) {
+              this.razas.push(response.data[i].nombre);
+              this.ids.push(response.data[i].id);
+            }
+            console.log(this.razas);
+          },
+          (error) => {
+            this.content =
+              (error.response && error.response.data) ||
+              error.message ||
+              error.toString();
           }
-          console.log(this.razas);
-        },
-        (error) => {
-          this.content =
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString();
-        }
-      );
+        );
+      },
+      deep: true,
     },
   },
   computed: {
