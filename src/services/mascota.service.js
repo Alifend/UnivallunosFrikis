@@ -38,5 +38,9 @@ class MascotaService {
   editarMascota( mascota ){
     return axios.put(API_URL+ 'mascota/'+mascota.id+'/',mascota,{headers:authHeader()});
   }
+
+  getHistoriasClinicas(id){
+    return axios.get(API_URL+ 'mascota/'+id+'/historia_clinica/',{headers:authHeader()});
+  }
 }
 export default new MascotaService();

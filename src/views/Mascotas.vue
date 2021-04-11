@@ -711,9 +711,14 @@ export default {
 
     VerMascota(i) {
       //Pendiente para ver historia clínica
-      MascotaService.getMascotas(this.mascotas[i].id).then(
+      MascotaService.getHistoriasClinicas(this.mascotas[i].id).then(
         (response) => {
-          this.animales = response.data;
+          console.log(response)
+         localStorage.setItem(
+            'mascota',
+            JSON.stringify(this.mascotas[i])
+          );
+          this.$router.push("/historias_clinicas");
         },
         (error) => {
           this.content =
