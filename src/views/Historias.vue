@@ -83,6 +83,7 @@
                 id="form3"
                 class="form-control validate"
                 rows="7"
+                readonly
               ></textarea>
             </div>
             <div class="md-form">
@@ -97,6 +98,7 @@
                 v-model="selected.diagnostico"
                 id="exampleFormControlTextarea1"
                 rows="7"
+                readonly
               ></textarea>
             </div>
           </div>
@@ -104,22 +106,10 @@
           <div class="modal-footer">
             <button
               type="button"
-              data-toggle="modal"
-              data-target="#razaModal"
-              class="añadir btn btn-success botoncito col-sm-3 pequeño"
-            >
-              Añadir
-            </button>
-
-            <button
-              type="button"
-              class="btn btn-danger botoncito pequeño col-sm-3"
-              data-toggle="modal"
-              data-target="#eliminarrazaModal"
+              class="btn btn-secondary"
               data-dismiss="modal"
-              aria-label="Close"
             >
-              Eliminar
+              Close
             </button>
           </div>
         </div>
