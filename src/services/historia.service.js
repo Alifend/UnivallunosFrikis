@@ -10,8 +10,11 @@ class HistoriaService{
         return axios.get(API_URL + 'mascota/'+id+'/historia_clinica/', { headers: authHeader() });
     }
     editarHistoria(id,historia){
-        return axios.put(API_URL + 'mascota/'+id+'/historia_clinica/',historia, { headers: authHeader() });
+        return axios.put(API_URL + 'mascota/entrada/'+id+'/', historia, { headers: authHeader() });
         
+    }
+    eliminarHistoria(id){
+        return axios.delete(API_URL + 'mascota/entrada/'+id+"/", { headers: authHeader() });
     }
 }
 

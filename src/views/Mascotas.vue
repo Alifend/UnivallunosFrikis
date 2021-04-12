@@ -520,9 +520,7 @@
       </div>
     </div>
 
-    <button type="button" v-on:click="Test()" class="btn btn-primary">
-      Save changes
-    </button>
+  
   </div>
 </template>
 

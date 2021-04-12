@@ -1,5 +1,161 @@
 <template>
   <div>
+
+
+        <!-- Añadir -->
+    <button
+      type="button"
+      data-toggle="modal"
+      v-on:click="SetearSelected()"
+      data-target="#modalAñadir"
+      class="botoncito btn btn-success float-right"
+    >
+      + Añadir Historia Clinica
+    </button>
+
+      <!-- Modal Crear -->
+    <div
+      class="modal fade"
+      id="modalAñadir"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="modalAñadir"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Crear Mascota
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body ">
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Nombre:
+              </label>
+              <input
+                type="text"
+                v-model="selected.nombre"
+                id="form3"
+                class="form-control validate"
+              />
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Género</label
+              >
+              <select
+                v-model="selected.sexo"
+                class="form-control form-select-lg mb-3"
+                aria-label=".form-select-lg example"
+              >
+                <option v-for="(gen, i) in generos" :key="i" :value="i + 1">{{
+                  gen
+                }}</option>
+              </select>
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Fecha de Nacimiento</label
+              >
+              <input
+                type="date"
+                v-model="selected.fecha_nacimiento"
+                id="form3"
+                class="form-control validate"
+              />
+            </div>
+            <div class="md-form">
+              <i class="fas fa-user prefix grey-text"></i>
+              <label data-error="wrong" data-success="right" for="form3"
+                >Especie</label
+              >
+              <select
+                v-model="selected.numero_especie"
+                class="form-control form-select-lg mb-3"
+                aria-label=".form-select-lg example"
+              >
+                <option
+                  v-for="(especie, i) in especies"
+                  :key="i"
+                  :value="i + 1"
+                  >{{ especie }}</option
+                >
+              </select>
+            </div>
+            <label data-error="wrong" data-success="right" for="form3"
+              >Raza</label
+            >
+            <div class="md-form cuadrado">
+              <i class="fas fa-user prefix grey-text"></i>
+
+              <select
+                v-model="selected.raza"
+                class="form-control form-select-lg mb-3 col-sm-6  "
+                aria-label=".form-select-lg example"
+                :disabled="mostrar"
+              >
+                <option v-for="(raz, i) in razas" :key="i" :value="ids[i]">{{
+                  raz
+                }}</option>
+              </select>
+
+              <button
+                type="button"
+                data-toggle="modal"
+                data-target="#razaModal"
+                class="añadir btn btn-success botoncito col-sm-3 pequeño"
+              >
+                Añadir
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-danger botoncito pequeño col-sm-3"
+                data-toggle="modal"
+                data-target="#eliminarrazaModal"
+                data-dismiss="modal"
+                aria-label="Close"
+                :disabled="mostrar"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              v-on:click="AñadirMascota()"
+              data-dismiss="modal"
+              class="btn btn-primary"
+            >
+              Save changes
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <!-- Table -->
     <div class="container">
       <table class="table text-center">
@@ -27,7 +183,7 @@
               <button
                 type="button"
                 class="btn btn-danger botoncito"
-                v-on:click="EditarMascota(i)"
+                v-on:click="SetearSelected(i)"
                 data-toggle="modal"
                 data-target="#eliminarModal"
               >
@@ -89,9 +245,9 @@
                 id="exampleFormControlTextarea1"
                 rows="7"
               ></textarea>
-            </div>  
+            </div>
           </div>
-          
+
           <div class="modal-footer">
             <button
               type="button"
@@ -113,8 +269,7 @@
       </div>
     </div>
 
-
-     <!-- Modal Confirmación -->
+    <!-- Modal Confirmación -->
     <div
       class="modal fade"
       id="confirmarModal"
@@ -207,8 +362,6 @@
         </div>
       </div>
     </div>
-
-    
   </div>
 </template>
 
@@ -242,8 +395,8 @@ export default {
     VerDetalle(i) {
       this.selected = Object.assign({}, this.historias[i]);
     },
-    EditarHistoria(){
-      HistoriaService.editarHistoria(this.selected.id,this.selected).then(
+    EditarHistoria() {
+      HistoriaService.editarHistoria(this.selected.id, this.selected).then(
         (response) => {
           console.log(response);
           this.ActualizarHistorias();
@@ -256,13 +409,38 @@ export default {
         }
       );
     },
-    ActualizarHistorias(){
-
+    ActualizarHistorias() {
+      this.historias = [];
+      let masc = JSON.parse(localStorage.getItem("mascota"));
+      HistoriaService.getHistorias(masc.id).then(
+        (response) => {
+          let info = response.data;
+          for (var a in info) {
+            this.historias.push(info[a]);
+          }
+        },
+        (error) => {
+          console.log("Pues hubo error socio" + error);
+        }
+      );
     },
-    EliminarHistoria(){
-
-    }
-
+    EliminarHistoria(selected) {
+      HistoriaService.eliminarHistoria(selected.id).then(
+        (response) => {
+          console.log(response);
+          this.ActualizarHistorias();
+        },
+        (error) => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
+    SetearSelected(i) {
+      this.selected = Object.assign({}, this.historias[i]);
+    },
   },
 };
 </script>
