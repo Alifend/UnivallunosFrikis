@@ -47,7 +47,7 @@
           <tr v-for="(usuario, i) in filteredRows" :key="i">
             <th class="align-middle" scope="row">{{ usuario.id }}</th>
             <td class="align-middle">{{ usuario.correo }}</td>
-            <td class="align-middle">{{ usuario.perfil }}</td>
+            <td class="align-middle">{{ perfiles[usuario.perfil-1] }}</td>
             <td class="align-middle">{{ usuario.nombre }}</td>
             <td class="align-middle">{{ usuario.apellido }}</td>
             <td class="align-middle">{{ usuario.fecha_nacimiento }}</td>
@@ -167,12 +167,18 @@
               <label data-error="wrong" data-success="right" for="form3"
                 >Perfil</label
               >
-              <input
-                type="text"
-                v-model="selected.perfil"
-                id="form3"
-                class="form-control validate"
-              />
+              <select
+                    v-model="selected.perfil"
+                    class="form-control form-select-lg mb-3"
+                    aria-label=".form-select-lg example"
+                  >
+                    <option
+                      v-for="(perf, i) in perfiles"
+                      :key="i"
+                      :value="i + 1"
+                      >{{ perf }}</option
+                    >
+                  </select>
             </div>
             <div class="md-form">
               <i class="fas fa-user prefix grey-text"></i>
@@ -391,12 +397,19 @@
                 </div>
                 <div class="form-group">
                   <label for="Tipo">Perfil</label>
-                  <input
+                  <select
                     v-model="nuevo.perfil"
-                    type="text"
-                    class="form-control"
-                    name="perfil"
-                  />
+                    class="form-control form-select-lg mb-3"
+                    aria-label=".form-select-lg example"
+                  >
+                    <option
+                      v-for="(perf, i) in perfiles"
+                      :key="i"
+                      :value="i + 1"
+                      >{{ perf }}</option
+                    >
+                  </select>
+
                   <div
                     v-if="submitted && errors.has('perfil')"
                     class="alert-danger"
@@ -418,9 +431,7 @@
             </div>
           </div>
 
-          <div class="modal-footer">
-            
-          </div>
+          <div class="modal-footer"></div>
         </div>
       </div>
     </div>
@@ -442,6 +453,7 @@ export default {
       submitted: false,
       successful: false,
       message: "",
+      perfiles: ["Admin", "Veterinario", "Cajero"],
     };
   },
   created() {
@@ -458,13 +470,13 @@ export default {
     );
   },
   methods: {
-    SetearNuevo(){
+    SetearNuevo() {
       this.nuevo = new Usuario();
     },
     handleRegister() {
       this.message = "";
       this.submitted = true;
-
+      console.log(this.nuevo,"kajsdlkajsdklja");
       this.$store.dispatch("auth/register", this.nuevo).then(
         (data) => {
           this.message = data.message;

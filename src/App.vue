@@ -18,6 +18,11 @@
             <font-awesome-icon icon="portrait" /> Clientes
           </router-link>
         </li>
+        <li v-if="showCajeroBoard" class="nav-item">
+          <router-link to="/factura" class="nav-link">
+            <font-awesome-icon icon="file-invoice-dollar" /> Facturas
+          </router-link>
+        </li>
       </div>
 
       <div v-if="!currentUser" class="navbar-nav ml-auto">
@@ -47,6 +52,14 @@
       <router-view />
     </div>
 
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <br>
     <br>
     <br>
@@ -92,6 +105,13 @@ export default {
 
       return false;
     },
+    showCajeroBoard() {
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 3;
+      }
+
+      return false;
+    },
   },
   watch: {
     showModeratorBoard: function(val) {
@@ -113,4 +133,20 @@ export default {
 .footerColor {
   background-color: #343a40;
 }
+.container{
+   /*background-color: #FFD8AF*/
+}
+#app {
+  /*background-color: #FFD8AF
+  background: url('./assets/profile_2.jpg');
+  */
+ /*background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;*/
+ 
+  }
+body{
+ 
+}
+
 </style>

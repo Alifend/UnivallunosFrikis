@@ -12,9 +12,12 @@ class HistoriaService{
     editarHistoria(id,historia){
         return axios.put(API_URL + 'mascota/entrada/'+id+'/', historia, { headers: authHeader() });
         
-    }
+    } 
     eliminarHistoria(id){
         return axios.delete(API_URL + 'mascota/entrada/'+id+"/", { headers: authHeader() });
+    }
+    postHistoria(historia){
+        return axios.post(API_URL + 'mascota/entrada/',historia ,{ headers: authHeader() });
     }
 }
 

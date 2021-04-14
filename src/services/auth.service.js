@@ -30,7 +30,8 @@ class AuthService {
     }
 
   register(user) {
-    return axios.post(API_URL + 'usuario/crear/', user,{ headers: authHeader() });
+    console.log(user,"casi afuera");
+    return axios.post(API_URL + 'usuario/crear/', user, { headers: authHeader() });
   }
 }
 
