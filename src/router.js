@@ -1,17 +1,16 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue';
+
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
-
 Vue.use(Router);
 
 export const router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/home',
-      component: Home
+      path: '/',
+      component: Login
     },
     {
       path: '/login',
@@ -50,6 +49,12 @@ export const router = new Router({
       name: 'mascotas',
       // lazy-loaded
       component: () => import('./views/Mascotas.vue')
+    },
+    {
+      path: '/historias_clinicas',
+      name: 'historias_clinicas',
+      // lazy-loaded
+      component: () => import('./views/Historias.vue')
     }
   ]
 });

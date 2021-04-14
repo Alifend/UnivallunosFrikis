@@ -356,6 +356,7 @@
         </div>
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -381,7 +382,7 @@ export default {
         "T.I": 2
       },
       tipos_docs : ["C.C","T.I"],
-      animales: "",
+      animales: [],
       selected: new Propietario(),
     };
   },
@@ -392,7 +393,6 @@ export default {
         for (var a in info) {
           this.propietarios.push(info[a]);
         }
-        console.log(this.propietarios);
       },
       (error) => {
         console.log("Pues hubo error socio" + error);
@@ -434,7 +434,7 @@ export default {
     PeticionPut() {
       UserService.editarUsuario(this.selected).then(
         (response) => {
-          console.log("Exito editando" + response);
+          console.log("Exito editando" + response.data);
 
           this.ActualizarTabla();
         },
@@ -450,6 +450,7 @@ export default {
       UserService.getPropietarios().then(
         (response) => {
           this.propietarios = response.data;
+          console.log(response.data)
         },
         (error) => {
           console.log("Pues hubo error socio" + error);
@@ -457,15 +458,15 @@ export default {
       );
     },
     VerUsuario(i) {
+      localStorage.removeItem('propietario')
       UserService.getAnimales(this.propietarios[i].id).then(
         (response) => {
-
           localStorage.setItem(
-            "propietario",
+            'propietario',
             JSON.stringify(this.propietarios[i])
           );
-          console.log(this.propietarios[i].id);
           this.animales = response.data;
+          this.$router.push("/mascotas");
         },
         (error) => {
           this.content =
@@ -474,7 +475,7 @@ export default {
             error.toString();
         }
       );
-      this.$router.push("/mascotas");
+      
     },
     EliminarUsuario(propietario) {
       UserService.deleteUsuario(propietario.id).then(
@@ -498,7 +499,6 @@ export default {
   },
   computed: {
     filteredRows() {
-      console.log(typeof this.propietarios);
       return this.propietarios.filter((propietario) => {
         const nombre = propietario.nombre.toString().toLowerCase();
         const apellido = propietario.apellido.toString().toLowerCase();

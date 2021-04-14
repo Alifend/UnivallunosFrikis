@@ -14,10 +14,13 @@ import {
   faUser,
   faUserPlus,
   faSignInAlt,
-  faSignOutAlt
+  faSignOutAlt,
+  faUsersCog,
+  faAddressCard,
+  faPortrait
 } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
+library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt,faUsersCog,faAddressCard,faPortrait);
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.config.productionTip = false;
 

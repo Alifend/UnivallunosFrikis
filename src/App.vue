@@ -5,17 +5,20 @@
       <div class="navbar-nav mr-auto">
         <li v-if="showModeratorBoard" class="nav-item">
           <router-link to="/vet" class="nav-link">
-            <font-awesome-icon icon="home" /> Clientes
+            <font-awesome-icon icon="portrait" /> Clientes
           </router-link>
         </li>
-        
-        <li class="nav-item">
-          <router-link v-if="currentUser" to="/profile" class="nav-link"
-            >Perfil</router-link
-          >
+        <li v-if="showAdminBoard" class="nav-item">
+          <router-link to="/admin" class="nav-link">
+            <font-awesome-icon icon="users-cog" /> Usuarios
+          </router-link>
+        </li>
+        <li v-if="showAdminBoard" class="nav-item">
+          <router-link to="/vet" class="nav-link">
+            <font-awesome-icon icon="portrait" /> Clientes
+          </router-link>
         </li>
       </div>
-
 
       <div v-if="!currentUser" class="navbar-nav ml-auto">
         <li class="nav-item">
@@ -28,8 +31,8 @@
       <div v-if="currentUser" class="navbar-nav ml-auto">
         <li class="nav-item">
           <router-link to="/profile" class="nav-link">
-            <font-awesome-icon icon="user" />
-            {{ currentUser.username }}
+            <font-awesome-icon icon="address-card" />
+            {{ currentUser.nombre }}
           </router-link>
         </li>
         <li class="nav-item">
@@ -43,6 +46,29 @@
     <div class="container">
       <router-view />
     </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center text-lg-start ">
+      <!-- Grid container -->
+      
+      <!-- Grid container -->
+
+      <!-- Copyright -->
+      <div
+        class="text-center p-3"
+        style="background-color: rgba(0, 0, 0, 0.2);"
+      >
+        © 2020 Copyright:
+        <a class="text-dark" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+      </div>
+      <!-- Copyright -->
+    </footer>
+    <!-- Footer -->
   </div>
 </template>
 
@@ -56,7 +82,7 @@ export default {
       if (this.currentUser && this.currentUser.perfil) {
         return this.currentUser.perfil == 1;
       }
-      
+
       return false;
     },
     showModeratorBoard() {
@@ -65,21 +91,26 @@ export default {
       }
 
       return false;
-    }
+    },
   },
-  watch:{
-    showModeratorBoard: function (val){
-      if (val == 2){
-        this.goVet()
+  watch: {
+    showModeratorBoard: function(val) {
+      if (val == 2) {
+        this.goVet();
       }
-    }
-    
+    },
   },
   methods: {
     logOut() {
       this.$store.dispatch("auth/logout");
       this.$router.push("/login");
-    }
+    },
   },
 };
 </script>
+
+<style scoped>
+.footerColor {
+  background-color: #343a40;
+}
+</style>

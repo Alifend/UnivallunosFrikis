@@ -20,9 +20,7 @@ class UserService {
   }
 
   getPropietarios(){
-    
     let a = axios.get(API_URL + 'propietario/' , {headers:authHeader()});
-    console.log(a)
     return a
   }
 

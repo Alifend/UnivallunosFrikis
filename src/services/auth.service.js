@@ -1,11 +1,9 @@
 import axios from 'axios';
-
+import authHeader from './auth-header';
 const API_URL = 'https://khor.pythonanywhere.com/api/';
 
 class AuthService {
   login(user) {
-      console.log("pasé");
-      console.log(user)
     return axios
       .post(API_URL + 'iniciar_sesion/', {
         correo: user.correo,
@@ -32,11 +30,7 @@ class AuthService {
     }
 
   register(user) {
-    return axios.post(API_URL + 'usuario/crear/', {
-      username: user.username,
-      email: user.email,
-      password: user.password
-    });
+    return axios.post(API_URL + 'usuario/crear/', user,{ headers: authHeader() });
   }
 }
 
