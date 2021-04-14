@@ -47,3 +47,19 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+.jumbotron {
+ /* background-image: url('../assets/banner_2.jpg');
+  background-size: cover;
+  border-style:solid;
+  border-color : #ffffff
+  */
+  /*background: url('../assets/profile.jpg') no-repeat center center; 
+    -webkit-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -o-background-size: 100% 100%;
+    background-size: 100% 100%;*/
+}
+</style>

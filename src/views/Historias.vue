@@ -6,7 +6,7 @@
     <button
       type="button"
       data-toggle="modal"
-      v-on:click="SetearSelected()"
+      v-on:click="SetearNuevo()"
       data-target="#modalAñadir"
       class="botoncito btn btn-success float-right"
     >
@@ -15,18 +15,18 @@
 
       <!-- Modal Crear -->
     <div
-      class="modal fade"
-      id="modalAñadir"
+      class="modal fade bd-example-modal-lg"
       tabindex="-1"
       role="dialog"
-      aria-labelledby="modalAñadir"
+      aria-labelledby="myLargeModalLabel"
       aria-hidden="true"
+      id="modalAñadir"
     >
-      <div class="modal-dialog modal-dialog-centered " role="document">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">
-              Crear Mascota
+            <h5 class="modal-title">
+              Añadir historia clínica
             </h5>
             <button
               type="button"
@@ -41,118 +41,51 @@
             <div class="md-form">
               <i class="fas fa-user prefix grey-text"></i>
               <label data-error="wrong" data-success="right" for="form3"
-                >Nombre:
+                >Motivo de Consulta:
               </label>
-              <input
+              <textarea
                 type="text"
-                v-model="selected.nombre"
+                v-model="nuevo.motivo_consulta"
                 id="form3"
                 class="form-control validate"
-              />
+                rows="7"
+              ></textarea>
             </div>
             <div class="md-form">
               <i class="fas fa-user prefix grey-text"></i>
               <label data-error="wrong" data-success="right" for="form3"
-                >Género</label
-              >
-              <select
-                v-model="selected.sexo"
-                class="form-control form-select-lg mb-3"
-                aria-label=".form-select-lg example"
-              >
-                <option v-for="(gen, i) in generos" :key="i" :value="i + 1">{{
-                  gen
-                }}</option>
-              </select>
-            </div>
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Fecha de Nacimiento</label
-              >
-              <input
-                type="date"
-                v-model="selected.fecha_nacimiento"
-                id="form3"
-                class="form-control validate"
-              />
-            </div>
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Especie</label
-              >
-              <select
-                v-model="selected.numero_especie"
-                class="form-control form-select-lg mb-3"
-                aria-label=".form-select-lg example"
-              >
-                <option
-                  v-for="(especie, i) in especies"
-                  :key="i"
-                  :value="i + 1"
-                  >{{ especie }}</option
-                >
-              </select>
-            </div>
-            <label data-error="wrong" data-success="right" for="form3"
-              >Raza</label
-            >
-            <div class="md-form cuadrado">
-              <i class="fas fa-user prefix grey-text"></i>
+                >Diagnóstico:
+              </label>
 
-              <select
-                v-model="selected.raza"
-                class="form-control form-select-lg mb-3 col-sm-6  "
-                aria-label=".form-select-lg example"
-                :disabled="mostrar"
-              >
-                <option v-for="(raz, i) in razas" :key="i" :value="ids[i]">{{
-                  raz
-                }}</option>
-              </select>
-
-              <button
-                type="button"
-                data-toggle="modal"
-                data-target="#razaModal"
-                class="añadir btn btn-success botoncito col-sm-3 pequeño"
-              >
-                Añadir
-              </button>
-
-              <button
-                type="button"
-                class="btn btn-danger botoncito pequeño col-sm-3"
-                data-toggle="modal"
-                data-target="#eliminarrazaModal"
-                data-dismiss="modal"
-                aria-label="Close"
-                :disabled="mostrar"
-              >
-                Eliminar
-              </button>
+              <textarea
+                class="form-control"
+                type="text"
+                v-model="nuevo.diagnostico"
+                id="exampleFormControlTextarea1"
+                rows="7"
+              ></textarea>
             </div>
           </div>
+
           <div class="modal-footer">
             <button
               type="button"
-              v-on:click="AñadirMascota()"
+              v-on:click="AgregarHistoria(nuevo)"
+              class="btn btn-success"
               data-dismiss="modal"
-              class="btn btn-primary"
             >
-              Save changes
+              Añadir
             </button>
             <button
               type="button"
               class="btn btn-secondary"
               data-dismiss="modal"
             >
-              Close
+              Cerrar
             </button>
           </div>
         </div>
-      </div>
+      </div> 
     </div>
 
 
@@ -168,14 +101,14 @@
         </thead>
         <tbody>
           <tr v-for="(hist, i) in historias" :key="i">
-            <th scope="row">{{ hist.id }}</th>
+            <th scope="row">{{ i+1 }}</th>
             <td>{{ hist.fecha_emision }}</td>
             <td>
               <button
                 type="button"
                 class="btn btn-success botoncito"
                 data-toggle="modal"
-                data-target=".bd-example-modal-lg"
+                data-target="#detalleModal"
                 v-on:click="VerDetalle(i)"
               >
                 Detalle
@@ -202,11 +135,12 @@
       role="dialog"
       aria-labelledby="myLargeModalLabel"
       aria-hidden="true"
+      id="detalleModal"
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">
+            <h5 class="modal-title" >
               Detalle
             </h5>
             <button
@@ -266,7 +200,7 @@
             </button>
           </div>
         </div>
-      </div>
+      </div> 
     </div>
 
     <!-- Modal Confirmación -->
@@ -367,11 +301,14 @@
 
 <script>
 import HistoriaService from "../services/historia.service";
+import Historia from '../models/historia'
+
 export default {
   data() {
     return {
       historias: [],
       selected: "",
+      nuevo : new Historia()
     };
   },
 
@@ -392,6 +329,25 @@ export default {
   },
 
   methods: {
+    AgregarHistoria(historia){
+      let id = JSON.parse(localStorage.getItem('mascota')).id
+      historia.historia_clinica = id
+      HistoriaService.postHistoria(historia).then(
+        (response) => {
+          console.log(response);
+          this.ActualizarHistorias();
+        },
+        (error) => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
+    SetearNuevo(){
+      this.nuevo = new Historia();
+    },
     VerDetalle(i) {
       this.selected = Object.assign({}, this.historias[i]);
     },

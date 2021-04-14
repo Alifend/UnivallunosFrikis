@@ -17,10 +17,11 @@ import {
   faSignOutAlt,
   faUsersCog,
   faAddressCard,
-  faPortrait
+  faPortrait,
+  faFileInvoiceDollar
 } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt,faUsersCog,faAddressCard,faPortrait);
+library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt,faUsersCog,faAddressCard,faPortrait,faFileInvoiceDollar);
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.config.productionTip = false;
 

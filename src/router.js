@@ -36,7 +36,7 @@ export const router = new Router({
       path: '/vet',
       name: 'veterinario',
       // lazy-loaded
-      component: () => import('./views/BoardModerator.vue')
+      component: () => import('./views/Veterinario.vue')
     },
     {
       path: '/user',
@@ -55,6 +55,12 @@ export const router = new Router({
       name: 'historias_clinicas',
       // lazy-loaded
       component: () => import('./views/Historias.vue')
+    },
+    {
+      path: '/factura',
+      name: 'factura',
+      // lazy-loaded
+      component: () => import('./views/Factura.vue')
     }
   ]
 });
