@@ -27,7 +27,7 @@
       />
       <br />
     </div>
-
+ 
     <!-- Table -->
     <div class="container">
       <table class="table text-center">
@@ -581,6 +581,7 @@ export default {
       );
     },
     SetearSelected() {
+        //Cambio
       this.EditarMascota()
       this.selected.nombre = "";
       this.selected.sexo = "";
