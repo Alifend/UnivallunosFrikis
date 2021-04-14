@@ -34,33 +34,27 @@
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Sexo</th>
-            <th scope="col">Fecha de Nacimiento</th>
-            <th scope="col">Especie</th>
-            <th scope="col">Raza</th>
+            <th scope="col">Fecha de emisión</th>
+            <th scope="col">Total</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(mascota, i) in filteredRows" :key="i">
-            <th scope="row">{{ mascota.id }}</th>
-            <td>{{ mascota.nombre }}</td>
-            <td>{{ generos[mascota.sexo - 1] }}</td>
-            <td>{{ mascota.fecha_nacimiento }}</td>
-            <td>{{ mascota.nombre_especie }}</td>
-            <td>{{ mascota.nombre_raza }}</td>
+          <tr v-for="(factura, i) in filteredRows" :key="i">
+            <th scope="row">{{ i }}</th>
+            <td>{{ factura.fecha_emision }}</td>
+            <td>{{ factura.total }}</td>
             <td>
               <button
                 type="button"
                 class="btn btn-success botoncito"
-                v-on:click="VerMascota(i)"
+                v-on:click="verDetalles(factura)"
               >
-                Historia Clínica
+                Detalles
               </button>
               <button
                 type="button"
-                v-on:click="EditarMascota(i)"
+                v-on:click="EditarDetalles(factura)"
                 data-toggle="modal"
                 data-target="#exampleModal"
                 class="btn btn-info botoncito"
@@ -70,7 +64,7 @@
               <button
                 type="button"
                 class="btn btn-danger botoncito"
-                v-on:click="EditarMascota(i)"
+                v-on:click="EditarDetalles(factura)"
                 data-toggle="modal"
                 data-target="#eliminarModal"
               >
@@ -95,7 +89,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">
-              Crear Mascota
+              Crear Factura
             </h5>
             <button
               type="button"
@@ -525,38 +519,34 @@
 </template>
 
 <script>
-import MascotaService from "../services/mascota.service";
-import Mascota from "../models/mascota";
+import FacturaService from "../services/factura.service";
+import Factura from "../models/factura";
+import Detalle from "../models/detalle";
+
 export default {
   name: "Mascota",
   data() {
     return {
+      servicio:[],
       mostrar: false,
       nuevo: "",
       raza_nueva: "",
       ids: [],
       temporal: "",
-      raza: "",
-      razas: [],
-      especie: "",
-      especies: ["Canino", "Felino", "Equino", "Bovino", "Porcino"],
       filter: "",
       content: "",
-      mascotas: [],
-      generos: ["F", "M"],
-      animales: "",
-      propietario: "",
-      selected: new Mascota(),
+      facturas: [],
+      dasd: new Detalle(),
+      selected: new Factura(),
     };
   },
   created() {
-    this.mascotas = [];
-    let prop = JSON.parse(localStorage.getItem("propietario"));
-    MascotaService.getMascotas(prop.id).then(
+    this.facturas = [];
+    FacturaService.getFacturas().then(
       (response) => {
         let info = response.data;
         for (var a in info) {
-          this.mascotas.push(info[a]);
+          this.facturas.push(info[a]);
         }
         this.ActualizarTabla();
       },
@@ -567,7 +557,7 @@ export default {
   },
   methods: {
     AñadirMascota() {
-      MascotaService.createMascota(this.selected).then(
+      FacturaService.createMascota(this.selected).then(
         (response) => {
           this.ActualizarTabla();
           console.log(response);
@@ -592,7 +582,7 @@ export default {
     },
     EliminarRaza() {
       console.log("klasjdklsajdkasj");
-      MascotaService.deleteRaza(this.selected.raza).then(
+      FacturaService.deleteRaza(this.selected.raza).then(
         (response) => {
           console.log(response);
           this.ActualizarRazas();
@@ -608,7 +598,7 @@ export default {
       this.raza = "";
     },
     ActualizarRazas() {
-      MascotaService.getRazas(this.selected.numero_especie).then(
+      FacturaService.getRazas(this.selected.numero_especie).then(
         (response) => {
           this.razas = [];
           this.ids = [];
@@ -628,7 +618,7 @@ export default {
     },
     CrearRaza(raza) {
       this.raza_nueva = "";
-      MascotaService.crearRaza(raza, this.selected.numero_especie).then(
+      FacturaService.crearRaza(raza, this.selected.numero_especie).then(
         (response) => {
           console.log("Exito creando raza" + response);
           //let temp = this.selected
@@ -652,7 +642,7 @@ export default {
       console.log();
 
       this.selected.especie = this.especie;
-      MascotaService.editarMascota(this.selected).then(
+      FacturaService.editarMascota(this.selected).then(
         (response) => {
           console.log("Exito editando" + response);
 
@@ -667,14 +657,13 @@ export default {
       );
     },
     ActualizarTabla() {
-      let id = JSON.parse(localStorage.getItem("propietario")).id;
       let todo = [];
-      MascotaService.getMascotas(id).then(
+      FacturaService.getFacturas().then(
         (response) => {
           //this.mascotas
           todo = response.data;
 
-          MascotaService.getRacitas().then(
+          FacturaService.getRacitas().then(
             (response) => {
               console.log(response.data);
 
@@ -690,7 +679,6 @@ export default {
                 }
               }
               this.mascotas = todo;
-
               //mascota.numero_especie= raza.especie
             },
             (error) => {
@@ -712,7 +700,7 @@ export default {
 
     VerMascota(i) {
       //Pendiente para ver historia clínica
-      MascotaService.getHistoriasClinicas(this.mascotas[i].id).then(
+      FacturaService.getHistoriasClinicas(this.mascotas[i].id).then(
         (response) => {
           console.log(response);
           localStorage.setItem("mascota", JSON.stringify(this.mascotas[i]));
@@ -727,7 +715,7 @@ export default {
       );
     },
     EliminarMascota(i) {
-      MascotaService.deleteMascota(i.id).then(
+      FacturaService.deleteMascota(i.id).then(
         (response) => {
           console.log(response);
           this.ActualizarTabla();
@@ -759,7 +747,7 @@ export default {
           console.log("I'm out")
           this.mostrar = false;
 
-          MascotaService.getRazas(val.numero_especie).then(
+          FacturaService.getRazas(val.numero_especie).then(
             (response) => {
               this.razas = [];
               this.ids = [];

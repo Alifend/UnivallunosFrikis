@@ -9,7 +9,11 @@
       <form @submit.prevent="handleLogin">
         <div class="form-group">
           <label class="text-center">Email</label>
-          <input type="email" v-model="user.correo" class="form-control" /><br>
+          <input
+            type="email"
+            v-model="user.correo"
+            class="form-control"
+          /><br />
           <span
             v-if="
               (!$v.user.correo.required || !$v.user.correo.email) &&
@@ -23,7 +27,11 @@
         </div>
         <div class="form-group">
           <label class="text-center">Password</label>
-          <input type="password" v-model="user.password" class="form-control" /><br>
+          <input
+            type="password"
+            v-model="user.password"
+            class="form-control"
+          /><br />
           <span
             v-if="!$v.user.password.required && $v.user.password.$dirty"
             class="text-danger alert alert-danger"
@@ -100,10 +108,17 @@ export default {
           },
           (error) => {
             this.loading = false;
-            this.message =
-              (error.response && error.response.data) ||
-              error.message ||
-              error.toString();
+            if (error.response.data.non_field_errors[0] == undefined) {
+              this.message =
+                (error.response && error.response.data.field) ||
+                error.message ||
+                error.toString();
+            } else {
+              this.message =
+                (error.response && error.response.data.non_field_errors[0]) ||
+                error.message ||
+                error.toString();
+            }
           }
         );
       }
