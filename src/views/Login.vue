@@ -108,9 +108,9 @@ export default {
           },
           (error) => {
             this.loading = false;
-            if (error.response.data.non_field_errors[0] == undefined) {
+            if (error.response.data.non_field_errors == undefined) {
               this.message =
-                (error.response && error.response.data.field) ||
+                (error.response && error.response.data.detail) ||
                 error.message ||
                 error.toString();
             } else {
