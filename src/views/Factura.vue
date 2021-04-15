@@ -10,7 +10,7 @@
       type="button"
       data-toggle="modal"
       v-on:click="SetearSelected()"
-      data-target="#modalAñadir"
+      data-target="#crearModal"
       class="añadir btn btn-success float-right"
     >
       + Añadir Factura
@@ -27,7 +27,7 @@
       />
       <br />
     </div>
- 
+
     <!-- Table -->
     <div class="container">
       <table class="table text-center">
@@ -48,7 +48,9 @@
               <button
                 type="button"
                 class="btn btn-success botoncito"
-                v-on:click="verDetalles(factura)"
+                v-on:click="VerDetalles(factura)"
+                data-toggle="modal"
+                data-target="#detallesModal"
               >
                 Detalles
               </button>
@@ -76,16 +78,16 @@
       </table>
     </div>
 
-    <!-- Modal Crear -->
+    <!-- Modal Detalles -->
     <div
       class="modal fade"
-      id="modalAñadir"
+      id="detallesModal"
       tabindex="-1"
       role="dialog"
-      aria-labelledby="modalAñadir"
+      aria-labelledby="detallesModal"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered " role="document">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable " role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">
@@ -100,263 +102,95 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body ">
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Nombre:
-              </label>
-              <input
-                type="text"
-                v-model="selected.nombre"
-                id="form3"
-                class="form-control validate"
-              />
-            </div>
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Género</label
-              >
-              <select
-                v-model="selected.sexo"
-                class="form-control form-select-lg mb-3"
-                aria-label=".form-select-lg example"
-              >
-                <option v-for="(gen, i) in generos" :key="i" :value="i + 1">{{
-                  gen
-                }}</option>
-              </select>
-            </div>
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Fecha de Nacimiento</label
-              >
-              <input
-                type="date"
-                v-model="selected.fecha_nacimiento"
-                id="form3"
-                class="form-control validate"
-              />
-            </div>
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Especie</label
-              >
-              <select
-                v-model="selected.numero_especie"
-                class="form-control form-select-lg mb-3"
-                aria-label=".form-select-lg example"
-              >
-                <option
-                  v-for="(especie, i) in especies"
-                  :key="i"
-                  :value="i + 1"
-                  >{{ especie }}</option
-                >
-              </select>
-            </div>
-            <label data-error="wrong" data-success="right" for="form3"
-              >Raza</label
-            >
-            <div class="md-form cuadrado">
-              <i class="fas fa-user prefix grey-text"></i>
+          <div class="modal-body">
+            <div class="container">
+              <table class="table text-center">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Servicio</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Cantidad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(detalle, i) in detalles" :key="i">
+                    <th scope="row">{{ i }}</th>
+                    <td>
+                      <select
+                        v-model="detalle.servicio"
+                        class="form-control form-select-lg mb-3"
+                        aria-label=".form-select-lg example"
+                        :disabled="true"
+                      >
+                        <option
+                          v-for="(servicio, i) in servicios"
+                          :key="i"
+                          :value="servicio"
+                          >{{ servicio.nombre }}</option
+                        >
+                      </select>
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        v-model="detalle.servicio.descripcion"
+                        id="form3"
+                        class="form-control validate"
+                        readonly
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        v-model="detalle.servicio.tipo"
+                        id="form3"
+                        class="form-control validate"
+                        readonly
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        v-model="detalle.servicio.precio"
+                        id="form3"
+                        class="form-control validate"
+                        readonly
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        v-model="detalle.cantidad"
+                        id="form3"
+                        class="form-control validate"
+                        readonly
+                      />
+                    </td>
 
-              <select
-                v-model="selected.raza"
-                class="form-control form-select-lg mb-3 col-sm-6  "
-                aria-label=".form-select-lg example"
-                :disabled="mostrar"
-              >
-                <option v-for="(raz, i) in razas" :key="i" :value="ids[i]">{{
-                  raz
-                }}</option>
-              </select>
 
-              <button
-                type="button"
-                data-toggle="modal"
-                data-target="#razaModal"
-                class="añadir btn btn-success botoncito col-sm-3 pequeño"
-              >
-                Añadir
-              </button>
+                  </tr>
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <br />
 
-              <button
-                type="button"
-                class="btn btn-danger botoncito pequeño col-sm-3"
-                data-toggle="modal"
-                data-target="#eliminarrazaModal"
-                data-dismiss="modal"
-                aria-label="Close"
-                :disabled="mostrar"
-              >
-                Eliminar
-              </button>
+                </tbody>
+              </table>
             </div>
           </div>
+
           <div class="modal-footer">
-            <button
-              type="button"
-              v-on:click="AñadirMascota()"
-              data-dismiss="modal"
-              class="btn btn-primary"
-            >
-              Save changes
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
-          </div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
         </div>
       </div>
     </div>
 
-    <!-- Modal Editar-->
-    <div
-      class="modal fade"
-      id="exampleModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered " role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">
-              Editar Mascota
-            </h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body ">
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Nombre:
-              </label>
-              <input
-                type="text"
-                v-model="selected.nombre"
-                id="form3"
-                class="form-control validate"
-              />
-            </div>
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Género</label
-              >
-              <select
-                v-model="selected.sexo"
-                class="form-control form-select-lg mb-3"
-                aria-label=".form-select-lg example"
-              >
-                <option v-for="(gen, i) in generos" :key="i" :value="i + 1">{{
-                  gen
-                }}</option>
-              </select>
-            </div>
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Fecha de Nacimiento</label
-              >
-              <input
-                type="date"
-                v-model="selected.fecha_nacimiento"
-                id="form3"
-                class="form-control validate"
-              />
-            </div>
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Especie</label
-              >
-              <select
-                v-model="selected.numero_especie"
-                class="form-control form-select-lg mb-3"
-                aria-label=".form-select-lg example"
-              >
-                <option
-                  v-for="(especie, i) in especies"
-                  :key="i"
-                  :value="i + 1"
-                  >{{ especie }}</option
-                >
-              </select>
-            </div>
-            <label data-error="wrong" data-success="right" for="form3"
-              >Raza</label
-            >
-            <div class="md-form cuadrado">
-              <i class="fas fa-user prefix grey-text"></i>
-
-              <select
-                v-model="selected.raza"
-                class="form-control form-select-lg mb-3 col-sm-6  "
-                aria-label=".form-select-lg example"
-              >
-                <option v-for="(raz, i) in razas" :key="i" :value="ids[i]">{{
-                  raz
-                }}</option>
-              </select>
-
-              <button
-                type="button"
-                data-toggle="modal"
-                data-target="#razaModal"
-                class="añadir btn btn-success botoncito col-sm-3 pequeño"
-              >
-                Añadir
-              </button>
-
-              <button
-                type="button"
-                class="btn btn-danger botoncito pequeño col-sm-3"
-                data-toggle="modal"
-                data-target="#eliminarrazaModal"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                Eliminar
-              </button>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              v-on:click="PeticionPut()"
-              data-dismiss="modal"
-              class="btn btn-primary"
-            >
-              Save changes
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Modal Eliminar -->
     <div
@@ -513,8 +347,6 @@
         </div>
       </div>
     </div>
-
-  
   </div>
 </template>
 
@@ -527,16 +359,18 @@ export default {
   name: "Mascota",
   data() {
     return {
-      servicio:[],
+      tipos: ["Procedimiento", "Producto"],
+      servicio: [],
+      servicios: [],
+      detalles: [],
       mostrar: false,
-      nuevo: "",
       raza_nueva: "",
       ids: [],
       temporal: "",
       filter: "",
       content: "",
       facturas: [],
-      dasd: new Detalle(),
+      nuevo: new Detalle(),
       selected: new Factura(),
     };
   },
@@ -548,7 +382,7 @@ export default {
         for (var a in info) {
           this.facturas.push(info[a]);
         }
-        this.ActualizarTabla();
+        //this.ActualizarTabla();
       },
       (error) => {
         console.log("Pues hubo error socio" + error);
@@ -556,23 +390,9 @@ export default {
     );
   },
   methods: {
-    AñadirMascota() {
-      FacturaService.createMascota(this.selected).then(
-        (response) => {
-          this.ActualizarTabla();
-          console.log(response);
-        },
-        (error) => {
-          this.content =
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString();
-        }
-      );
-    },
     SetearSelected() {
-        //Cambio
-      this.EditarMascota()
+      //Cambio
+      this.EditarMascota();
       this.selected.nombre = "";
       this.selected.sexo = "";
       this.selected.fecha_nacimiento = "";
@@ -638,73 +458,13 @@ export default {
     Test() {
       console.log(this.mascotas);
     },
-    PeticionPut() {
-      console.log();
 
-      this.selected.especie = this.especie;
-      FacturaService.editarMascota(this.selected).then(
-        (response) => {
-          console.log("Exito editando" + response);
-
-          this.ActualizarTabla();
-        },
-        (error) => {
-          this.content =
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString();
-        }
-      );
-    },
-    ActualizarTabla() {
-      let todo = [];
-      FacturaService.getFacturas().then(
-        (response) => {
-          //this.mascotas
-          todo = response.data;
-
-          FacturaService.getRacitas().then(
-            (response) => {
-              console.log(response.data);
-
-              for (var j = 0; j < todo.length; j++) {
-                for (var i = 0; i < response.data.length; i++) {
-                  if (todo[j].raza == response.data[i].id) {
-                    todo[j].nombre_raza = response.data[i].nombre;
-                    todo[j].nombre_especie = this.especies[
-                      response.data[i].especie - 1
-                    ];
-                    todo[j].numero_especie = response.data[i].especie;
-                  }
-                }
-              }
-              this.mascotas = todo;
-              //mascota.numero_especie= raza.especie
-            },
-            (error) => {
-              console.log("Pues hubo error socio" + error);
-            }
-          );
-        },
-        (error) => {
-          console.log("Pues hubo error socio" + error);
-        }
-      );
-
-      //todo.mascota.nombre_raza =raza.nombre
-      //mascota.nombre_especie= this.especies[raza.especie+1]
-      //mascota.numero_especie= raza.especie
-
-      console.log(this.mascotas);
-    },
-
-    VerMascota(i) {
-      //Pendiente para ver historia clínica
-      FacturaService.getHistoriasClinicas(this.mascotas[i].id).then(
+    VerDetalles(factura) {
+      FacturaService.getDetalles(factura.id).then(
         (response) => {
           console.log(response);
-          localStorage.setItem("mascota", JSON.stringify(this.mascotas[i]));
-          this.$router.push("/historias_clinicas");
+          this.detalles = response.data;
+          this.GuardarServicios();
         },
         (error) => {
           this.content =
@@ -714,11 +474,11 @@ export default {
         }
       );
     },
-    EliminarMascota(i) {
-      FacturaService.deleteMascota(i.id).then(
+    GuardarServicios() {
+      FacturaService.getServicios().then(
         (response) => {
           console.log(response);
-          this.ActualizarTabla();
+          this.servicios = response.data;
         },
         (error) => {
           this.content =
@@ -728,6 +488,7 @@ export default {
         }
       );
     },
+
     EditarMascota(i) {
       // asignación sin bindear
       console.log(i, "oh");
@@ -739,12 +500,12 @@ export default {
       handler: function(val) {
         console.log("holaaaaaaaaaaaaaaaaaaaaaaaaaa");
         if (this.selected.numero_especie == undefined) {
-          console.log("I'm in")
+          console.log("I'm in");
           this.mostrar = true;
           this.razas = [];
           this.ids = [];
         } else {
-          console.log("I'm out")
+          console.log("I'm out");
           this.mostrar = false;
 
           FacturaService.getRazas(val.numero_especie).then(
@@ -771,15 +532,14 @@ export default {
   },
   computed: {
     filteredRows() {
-      return this.mascotas.filter((mascota) => {
-        const nombre = mascota.nombre.toString().toLowerCase();
+      return this.facturas.filter((factura) => {
+        const nombre = factura.fecha_emision.toString().toLowerCase();
 
         const searchTerm = this.filter.toString().toLowerCase();
 
         return nombre.includes(searchTerm);
       });
     },
-
   },
 };
 </script>
@@ -804,7 +564,7 @@ label {
 
 .pequeño {
   height: 77%;
-  width: 100%;
+  width: 70%;
   margin-top: 0%;
 }
 </style>
