@@ -44,7 +44,7 @@
           <tr v-for="(factura, i) in filteredRows" :key="i">
             <th scope="row">{{ i }}</th>
             <td>{{ factura.fecha_emision }}</td>
-            <td>{{ factura.cliente }}</td>
+            <td>{{ factura.nombre }}</td>
             <td>{{ factura.total }}</td>
             <td>
               <button
@@ -233,20 +233,30 @@
                   <label data-error="wrong" data-success="right" for="form3"
                     >Nombre:
                   </label>
-                  <input type="text" id="form3" class="form-control validate" />
+                  <input
+                    type="text"
+                    id="form3"
+                    class="form-control validate"
+                    v-model="cliente.nombre"
+                  />
                 </div>
                 <div class="col-3">
                   <label data-error="wrong" data-success="right" for="form3"
                     >Dirección:
                   </label>
-                  <input type="text" id="form3" class="form-control validate" />
+                  <input
+                    type="text"
+                    id="form3"
+                    class="form-control validate"
+                    v-model="cliente.direccion"
+                  />
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                   <label data-error="wrong" data-success="right" for="form3"
                     >Tipo de documento:
                   </label>
                   <select
-                    v-model="temp.sexo"
+                    v-model="cliente.tipo_documento"
                     class="form-control form-select-lg mb-3"
                     aria-label=".form-select-lg example"
                   >
@@ -262,7 +272,12 @@
                   <label data-error="wrong" data-success="right" for="form3"
                     >Documento:
                   </label>
-                  <input type="text" id="form3" class="form-control validate" />
+                  <input
+                    type="text"
+                    id="form3"
+                    class="form-control validate"
+                    v-model="cliente.numero_documento"
+                  />
                 </div>
               </div>
               <br />
@@ -279,6 +294,76 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                    <th scope="row">-</th>
+                    <td>
+                      <select
+                        v-model="temp.servicio"
+                        class="form-control form-select-lg mb-3"
+                        aria-label=".form-select-lg example"
+                      >
+                        <option
+                          v-for="(servicio, i) in servicios"
+                          :key="i"
+                          :value="servicio"
+                          >{{ servicio.nombre }}</option
+                        >
+                      </select>
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        v-model="temp.servicio.descripcion"
+                        id="form3"
+                        class="form-control validate"
+                        readonly
+                      />
+                    </td>
+                    <td>
+                      <select
+                        v-model="temp.servicio.tipo"
+                        class="form-control form-select-lg mb-3"
+                        aria-label=".form-select-lg example"
+                        :disabled="true"
+                      >
+                        <option
+                          v-for="(tipo, i) in ['Procedimiento', 'Producto']"
+                          :key="i"
+                          :value="i + 1"
+                          >{{ tipo }}</option
+                        >
+                      </select>
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        v-model="temp.servicio.precio"
+                        id="form3"
+                        class="form-control validate"
+                        readonly
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        id="form3"
+                        v-model="cantidad"
+                        class="form-control validate"
+                      />
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        v-on:click="
+                          Agregar_a_Detalle();
+                          CalcularTotal();
+                        "
+                        class="añadir btn btn-success float-right"
+                      >
+                        +
+                      </button>
+                    </td>
+                  </tr>
                   <tr v-for="(nuevo, i) in nuevos" :key="i">
                     <th scope="row">{{ i }}</th>
                     <td>
@@ -286,6 +371,7 @@
                         v-model="nuevo.servicio"
                         class="form-control form-select-lg mb-3"
                         aria-label=".form-select-lg example"
+                        :disabled="true"
                       >
                         <option
                           v-for="(servicio, i) in servicios"
@@ -328,19 +414,25 @@
                         v-model="nuevo.cantidad"
                         id="form3"
                         class="form-control validate"
+                        readonly
                       />
                     </td>
                     <td>
                       <button
                         type="button"
                         class="btn btn-danger"
-                        v-on:click="EliminarServicioTemporal(i)"
+                        v-on:click="
+                          EliminarServicioTemporal(i);
+                          CalcularTotal();
+                          Limpiar();
+                        "
                         aria-label="Close"
                       >
                         X
                       </button>
                     </td>
                   </tr>
+
                   <br />
                   <br />
                   <br />
@@ -353,79 +445,14 @@
           </div>
 
           <div class="modal-footer ">
-            <table class="table text-center">
-              <thead>
-                <tr class="esconder">
-                  <th scope="col">#</th>
-                  <th scope="col">Servicio</th>
-                  <th scope="col">Descripción</th>
-                  <th scope="col">Tipo</th>
-                  <th scope="col">Precio</th>
-                  <th scope="col">Cantidad</th>
-                  <th scope="col">Acción</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">-</th>
-                  <td>
-                    <select
-                      v-model="temp.servicio"
-                      class="form-control form-select-lg mb-3"
-                      aria-label=".form-select-lg example"
-                    >
-                      <option
-                        v-for="(servicio, i) in servicios"
-                        :key="i"
-                        :value="servicio"
-                        >{{ servicio.nombre }}</option
-                      >
-                    </select>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      v-model="temp.servicio.descripcion"
-                      id="form3"
-                      class="form-control validate"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      v-model="temp.servicio.tipo"
-                      id="form3"
-                      class="form-control validate"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      v-model="temp.servicio.precio"
-                      id="form3"
-                      class="form-control validate"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      id="form3"
-                      v-model="cantidad"
-                      class="form-control validate"
-                    />
-                  </td>
-                  <td>
-                    <button
-                      type="button"
-                      v-on:click="Agregar_a_Detalle()"
-                      class="añadir btn btn-success float-right"
-                    >
-                      +
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <h4 class="desp_izq">Total : {{ total }}</h4>
+            <button
+              type="button"
+              class="añadir btn btn-success float-right"
+              v-on:click="AñadirFactura()"
+            >
+              Terminar Factura
+            </button>
           </div>
         </div>
       </div>
@@ -444,7 +471,7 @@
         <div class="modal-content ">
           <div class="modal-header ">
             <h5 class="modal-title centrado" id="exampleModalLabel">
-              ¿Está seguro de borrar la mascota?
+              ¿Está seguro de borrar la factura?
             </h5>
             <button
               type="button"
@@ -459,7 +486,7 @@
             <button
               type="button"
               class="btn btn-danger botoncito"
-              v-on:click="EliminarMascota(selected)"
+              v-on:click="EliminarFactura(selected)"
               data-dismiss="modal"
               aria-label="Close"
             >
@@ -598,10 +625,11 @@ export default {
   data() {
     return {
       tipos: ["Procedimiento", "Producto"],
+      cliente: {},
       detalles_temporales: [],
       cantidad: "",
       temp: "",
-      total : '',
+      total: 0,
       servicio: [],
       servicios: [],
       detalles: [],
@@ -633,6 +661,94 @@ export default {
     );
   },
   methods: {
+    Actualizar() {
+      this.facturas = [];
+      FacturaService.getFacturas().then(
+        (response) => {
+          let info = response.data;
+          for (var a in info) {
+            this.facturas.push(info[a]);
+          }
+          //this.ActualizarTabla();
+        },
+        (error) => {
+          console.log("Pues hubo error socio" + error);
+        }
+      );
+    },
+    EliminarFactura() {
+      FacturaService.eliminarFactura(this.selected.id).then(
+        (response) => {
+          console.log(response.data, "Estos son los detalles de eliminar");
+          this.Actualizar();
+        },
+        (error) => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
+    AñadirFactura() {
+      //Primer post
+      FacturaService.addFactura(this.cliente).then(
+        (response) => {
+          console.log(response);
+          FacturaService.getFacturas().then(
+            (response) => {
+              let temporal = 0;
+              for (let i = 0; i < response.data.length; i++) {
+                if (response.data[i].id > temporal) {
+                  temporal = response.data[i].id;
+                }
+              }
+
+              for (let i = 0; i < this.nuevos.length; i++) {
+                let enviar = {
+                  factura: temporal,
+                  servicio: this.nuevos[i].servicio.id,
+                  cantidad: this.nuevos[i].cantidad,
+                  precio: this.nuevos[i].precio,
+                };
+
+                FacturaService.addDetalles(enviar).then(
+                  (response) => {
+                    console.log(response.data);
+                  },
+                  (error) => {
+                    console.log("Pues hubo error socio" + error);
+                  }
+                );
+              }
+            },
+            (error) => {
+              console.log("Pues hubo error socio" + error);
+            }
+          );
+        },
+        (error) => {
+          console.log("Pues hubo error socio" + error);
+        }
+      );
+    },
+    CalcularTotal() {
+      this.total = 0;
+      for (let i = 0; i < this.nuevos.length; i++) {
+        this.total =
+          this.total + this.nuevos[i].cantidad * this.nuevos[i].servicio.precio;
+      }
+
+      this.temp = {
+        servicio: {
+          id: "",
+          nombre: "",
+          descripcion: "",
+          tipo: "",
+          precio: "",
+        },
+      };
+    },
     EliminarServicioTemporal(i) {
       this.nuevos.splice(i, 1);
     },
@@ -643,23 +759,20 @@ export default {
         precio: this.temp.servicio.precio * this.cantidad,
       };
       console.log(lista, "asjdlkasjdklasjdkl");
-      this.nuevos.push(lista);
-    },
-    ResetearTemp() {
-      this.nuevos = [
-        {
-          factura: "",
-          servicio: {
-            id: "",
-            nombre: "",
-            descripcion: "",
-            tipo: "",
-            precio: "",
-          },
-          cantidad: "",
+      //this.nuevos.push(lista);
+      this.nuevos.unshift(lista);
+      this.temp = {
+        servicio: {
+          id: "",
+          nombre: "",
+          descripcion: "",
+          tipo: "",
           precio: "",
         },
-      ];
+      };
+    },
+    ResetearTemp() {
+      this.nuevos = [];
       this.temp = {
         servicio: {
           id: "",
@@ -693,8 +806,11 @@ export default {
       localStorage.setItem("factura", JSON.stringify(factura));
       FacturaService.getDetalles(factura.id).then(
         (response) => {
-          console.log(response);
-          this.detalles = response.data;
+          console.log(response.data, "Estos son los detalles");
+          this.detalles = [];
+          for (let i = 0; i < response.data.length; i++) {
+            this.detalles.push(response.data[i]);
+          }
           this.GuardarServicios();
         },
         (error) => {
@@ -720,9 +836,8 @@ export default {
       );
     },
 
-    EditarMascota(i) {
-      console.log(i, "oh");
-      this.selected = Object.assign({}, this.mascotas[i]);
+    EditarDetalles(factura) {
+      this.selected = factura;
     },
   },
   watch: {
@@ -787,7 +902,9 @@ label {
   display: inline-block;
   text-align: right;
 }
-
+.desp_izq {
+  margin-right: 15%;
+}
 .cuadrado {
   display: flex;
 }

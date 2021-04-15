@@ -16,6 +16,19 @@ class FacturaService{
         return axios.get(API_URL + 'servicios/', { headers: authHeader() });
         
     }
+
+    addFactura(factura){
+        return axios.post(API_URL + 'facturas/',factura ,{ headers: authHeader() });
+        
+    }
+
+    addDetalles(detalle){
+        return axios.post(API_URL + 'detalle/',detalle ,{ headers: authHeader() });
+        
+    }
+    eliminarFactura(id){
+        return axios.delete(API_URL + 'factura'+'/'+id+'/',{ headers: authHeader() });
+    }
 }
 
 export default new FacturaService();
