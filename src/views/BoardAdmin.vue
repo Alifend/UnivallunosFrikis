@@ -554,6 +554,11 @@ export default {
     },
   },
   computed: {
+    currentUser() {
+      if (this.$store.state.auth.user.perfil != 1){
+        this.$router.push("/profile");
+      }
+    },
     filteredRows() {
       return this.usuarios.filter((usuario) => {
         const nombre = usuario.nombre.toString().toLowerCase();
