@@ -2,39 +2,40 @@
   <div class="container">
     <header class="jumbotron">
       <h3>
-        <strong>{{ currentUser.username }}</strong> Profile
+        Perfil de <strong>{{ currentUser.nombre}} {{ currentUser.apellido }}</strong>
       </h3>
     </header>
-    <p>
-      <strong>Token:</strong>
-      {{ currentUser.token.substring(0, 20) }} ...
-      {{ currentUser.token.substr(currentUser.token.length - 20) }}
-    </p>
-    <p>
-      <strong>Id:</strong>
-      {{ currentUser.id }}
-    </p>
-    <p>
+     <p>
       <strong>Email:</strong>
       {{ currentUser.correo }}
     </p>
     <p>
-      <strong>Perfil:</strong>
-      {{ currentUser.perfil }}
+      <strong>Telefono:</strong>
+      {{ currentUser.telefono }}
     </p>
-
-    <strong>Authorities:</strong>
-    <ul>
-      <li v-for="(role, index) in currentUser.roles" :key="index">
-        {{ role }}
-      </li>
-    </ul>
+   <p>
+      <strong>direccion:</strong>
+      {{ currentUser.direccion }}
+    </p>
+    <p>
+      <strong>Fecha de Nacimiento:</strong>
+      {{ currentUser.fecha_nacimiento }}
+    </p>
+    <p>
+      <strong>Perfil:</strong>
+      {{ rol[currentUser.perfil-1] }}
+    </p>
   </div>
 </template>
 
 <script>
 export default {
   name: "Profile",
+  data() {
+    return {
+      rol: ["Administrador", "Veterinario", "Cajero"],
+    };
+  },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
@@ -49,9 +50,8 @@ export default {
 </script>
 
 <style scoped>
-
 .jumbotron {
- /* background-image: url('../assets/banner_2.jpg');
+  /* background-image: url('../assets/banner_2.jpg');
   background-size: cover;
   border-style:solid;
   border-color : #ffffff
