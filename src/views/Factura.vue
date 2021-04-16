@@ -4,7 +4,7 @@
     <header class="jumbotron">
       <h1>Facturas</h1>
     </header>
-  #.
+    #.
     <!-- Añadir -->
     <button
       type="button"
@@ -42,7 +42,7 @@
         </thead>
         <tbody>
           <tr v-for="(factura, i) in filteredRows" :key="i">
-            <th scope="row">{{ i+1 }}</th>
+            <th scope="row">{{ i + 1 }}</th>
             <td>{{ factura.fecha_emision | formatDate }}</td>
             <td>{{ factura.nombre }}</td>
             <td>{{ factura.total }}</td>
@@ -160,7 +160,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(detalle, i) in detalles" :key="i">
-                    <th scope="row">{{ i+1 }}</th>
+                    <th scope="row">{{ i + 1 }}</th>
                     <td>
                       <select
                         v-model="detalle.servicio"
@@ -225,6 +225,7 @@
           </div>
 
           <div class="modal-footer">
+            <h4 class="desp_izq">Total : {{ total }}</h4>
             <button
               type="button"
               class="btn btn-secondary"
@@ -683,7 +684,7 @@ export default {
     };
   },
   created() {
-    if ( this.showCajeroBoard == false  && this.showAdminBoard == false) {
+    if (this.showCajeroBoard == false && this.showAdminBoard == false) {
       this.goProfile();
     }
     this.ResetearTemp();
@@ -747,7 +748,7 @@ export default {
                   temporal = response.data[i].id;
                 }
               }
-              
+
               for (let i = 0; i < this.nuevos.length; i++) {
                 let enviar = {
                   factura: temporal,
@@ -759,14 +760,13 @@ export default {
                 FacturaService.addDetalles(enviar).then(
                   (response) => {
                     console.log(response.data);
-                    
                   },
                   (error) => {
                     console.log("Pues hubo error socio" + error);
                   }
                 );
               }
-              this.Actualizar()
+              this.Actualizar();
             },
             (error) => {
               console.log("Pues hubo error socio" + error);
@@ -778,22 +778,19 @@ export default {
         }
       );
     },
+    CalcularTotaldetalle() {
+      this.total = 0;
+      for (let i = 0; i < this.detalles.length; i++) {
+        this.total =
+          this.total + this.detalles[i].cantidad * this.detalles[i].servicio.precio;
+      }
+    },
     CalcularTotal() {
       this.total = 0;
       for (let i = 0; i < this.nuevos.length; i++) {
         this.total =
           this.total + this.nuevos[i].cantidad * this.nuevos[i].servicio.precio;
       }
-
-      this.temp = {
-        servicio: {
-          id: "",
-          nombre: "",
-          descripcion: "",
-          tipo: "",
-          precio: "",
-        },
-      };
     },
     EliminarServicioTemporal(i) {
       this.nuevos.splice(i, 1);
@@ -859,6 +856,7 @@ export default {
           }
           this.GuardarServicios();
           this.EditarDetalles(factura);
+          this.CalcularTotaldetalle()
         },
         (error) => {
           this.content =
