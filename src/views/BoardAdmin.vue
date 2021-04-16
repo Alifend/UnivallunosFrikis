@@ -558,6 +558,7 @@ export default {
       if (this.currentUser.perfil != 1) {
         this.$router.push("/profile");
       }
+      return false;
     },
     filteredRows() {
       return this.usuarios.filter((usuario) => {
