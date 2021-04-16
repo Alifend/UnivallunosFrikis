@@ -26,7 +26,7 @@
         
         <li v-if="showAdminBoard" class="nav-item">
           <router-link to="/servicio" class="nav-link">
-            <font-awesome-icon icon="file-invoice-dollar" /> Servicios
+            <font-awesome-icon icon="shopping-cart" /> Servicios
           </router-link>
         </li>
         
