@@ -45,9 +45,9 @@
         </thead>
         <tbody>
           <tr v-for="(usuario, i) in filteredRows" :key="i">
-            <th class="align-middle" scope="row">{{ i+1 }}</th>
+            <th class="align-middle" scope="row">{{ i + 1 }}</th>
             <td class="align-middle">{{ usuario.correo }}</td>
-            <td class="align-middle">{{ perfiles[usuario.perfil-1] }}</td>
+            <td class="align-middle">{{ perfiles[usuario.perfil - 1] }}</td>
             <td class="align-middle">{{ usuario.nombre }}</td>
             <td class="align-middle">{{ usuario.apellido }}</td>
             <td class="align-middle">{{ usuario.fecha_nacimiento }}</td>
@@ -168,17 +168,14 @@
                 >Perfil</label
               >
               <select
-                    v-model="selected.perfil"
-                    class="form-control form-select-lg mb-3"
-                    aria-label=".form-select-lg example"
-                  >
-                    <option
-                      v-for="(perf, i) in perfiles"
-                      :key="i"
-                      :value="i + 1"
-                      >{{ perf }}</option
-                    >
-                  </select>
+                v-model="selected.perfil"
+                class="form-control form-select-lg mb-3"
+                aria-label=".form-select-lg example"
+              >
+                <option v-for="(perf, i) in perfiles" :key="i" :value="i + 1">{{
+                  perf
+                }}</option>
+              </select>
             </div>
             <div class="md-form">
               <i class="fas fa-user prefix grey-text"></i>
@@ -476,7 +473,7 @@ export default {
     handleRegister() {
       this.message = "";
       this.submitted = true;
-      console.log(this.nuevo,"kajsdlkajsdklja");
+      console.log(this.nuevo, "kajsdlkajsdklja");
       this.$store.dispatch("auth/register", this.nuevo).then(
         (data) => {
           this.message = data.message;
@@ -555,7 +552,10 @@ export default {
   },
   computed: {
     currentUser() {
-      if (this.$store.state.auth.user.perfil != 1){
+      return this.$store.state.auth.user;
+    },
+    getOutofHere() {
+      if (this.currentUser.perfil != 1) {
         this.$router.push("/profile");
       }
     },
