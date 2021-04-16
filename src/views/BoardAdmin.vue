@@ -45,7 +45,7 @@
         </thead>
         <tbody>
           <tr v-for="(usuario, i) in filteredRows" :key="i">
-            <th class="align-middle" scope="row">{{ usuario.id }}</th>
+            <th class="align-middle" scope="row">{{ i+1 }}</th>
             <td class="align-middle">{{ usuario.correo }}</td>
             <td class="align-middle">{{ perfiles[usuario.perfil-1] }}</td>
             <td class="align-middle">{{ usuario.nombre }}</td>

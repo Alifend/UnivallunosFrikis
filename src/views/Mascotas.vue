@@ -44,7 +44,7 @@
         </thead>
         <tbody>
           <tr v-for="(mascota, i) in filteredRows" :key="i">
-            <th scope="row">{{ mascota.id }}</th>
+            <th scope="row">{{ i+1 }}</th>
             <td>{{ mascota.nombre }}</td>
             <td>{{ generos[mascota.sexo - 1] }}</td>
             <td>{{ mascota.fecha_nacimiento }}</td>

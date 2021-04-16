@@ -102,7 +102,7 @@
         <tbody>
           <tr v-for="(hist, i) in historias" :key="i">
             <th scope="row">{{ i+1 }}</th>
-            <td>{{ hist.fecha_emision }}</td>
+            <td>{{ hist.fecha_emision | formatDate}}</td>
             <td>
               <button
                 type="button"

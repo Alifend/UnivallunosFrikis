@@ -42,8 +42,8 @@
         </thead>
         <tbody>
           <tr v-for="(factura, i) in filteredRows" :key="i">
-            <th scope="row">{{ i }}</th>
-            <td>{{ factura.fecha_emision }}</td>
+            <th scope="row">{{ i+1 }}</th>
+            <td>{{ factura.fecha_emision | formatDate }}</td>
             <td>{{ factura.nombre }}</td>
             <td>{{ factura.total }}</td>
             <td>
@@ -55,15 +55,6 @@
                 data-target="#detallesModal"
               >
                 Detalles
-              </button>
-              <button
-                type="button"
-                v-on:click="EditarDetalles(factura)"
-                data-toggle="modal"
-                data-target="#exampleModal"
-                class="btn btn-info botoncito"
-              >
-                Editar
               </button>
               <button
                 type="button"
@@ -122,7 +113,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(detalle, i) in detalles" :key="i">
-                    <th scope="row">{{ i }}</th>
+                    <th scope="row">{{ i+1 }}</th>
                     <td>
                       <select
                         v-model="detalle.servicio"
@@ -450,6 +441,7 @@
               type="button"
               class="añadir btn btn-success float-right"
               v-on:click="AñadirFactura()"
+              data-dismiss="modal"
             >
               Terminar Factura
             </button>
@@ -619,7 +611,6 @@
 <script>
 import FacturaService from "../services/factura.service";
 import Factura from "../models/factura";
-
 export default {
   name: "Mascota",
   data() {
@@ -703,7 +694,7 @@ export default {
                   temporal = response.data[i].id;
                 }
               }
-
+              
               for (let i = 0; i < this.nuevos.length; i++) {
                 let enviar = {
                   factura: temporal,
@@ -715,12 +706,14 @@ export default {
                 FacturaService.addDetalles(enviar).then(
                   (response) => {
                     console.log(response.data);
+                    
                   },
                   (error) => {
                     console.log("Pues hubo error socio" + error);
                   }
                 );
               }
+              this.Actualizar()
             },
             (error) => {
               console.log("Pues hubo error socio" + error);

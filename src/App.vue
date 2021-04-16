@@ -18,6 +18,18 @@
             <font-awesome-icon icon="portrait" /> Clientes
           </router-link>
         </li>
+        <li v-if="showAdminBoard" class="nav-item">
+          <router-link to="/factura" class="nav-link">
+            <font-awesome-icon icon="file-invoice-dollar" /> Facturas
+          </router-link>
+        </li>
+        
+        <li v-if="showAdminBoard" class="nav-item">
+          <router-link to="/servicio" class="nav-link">
+            <font-awesome-icon icon="file-invoice-dollar" /> Servicios
+          </router-link>
+        </li>
+        
         <li v-if="showCajeroBoard" class="nav-item">
           <router-link to="/factura" class="nav-link">
             <font-awesome-icon icon="file-invoice-dollar" /> Facturas

@@ -61,6 +61,12 @@ export const router = new Router({
       name: 'factura',
       // lazy-loaded
       component: () => import('./views/Factura.vue')
+    },
+    {
+      path: '/servicio',
+      name: 'servicio',
+      // lazy-loaded
+      component: () => import('./views/Servicios.vue')
     }
   ]
 });
