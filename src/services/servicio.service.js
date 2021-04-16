@@ -9,15 +9,15 @@ class ServicioService {
     return axios.get(API_URL + 'servicios/', {headers:authHeader()});
   }
 
-  deleteMascota(id){
+  deleteServicio(id){
     return axios.delete(API_URL+ 'servicio/'+id, {headers:authHeader()});
   }
 
-  editarMascota( mascota ){
-    return axios.put(API_URL+ 'servicio/'+mascota.id, mascota, {headers:authHeader()});
+  editarServices( servicio ){
+    return axios.put(API_URL+ 'servicio/'+servicio.id, servicio, {headers:authHeader()});
   }
 
-  createMascota(servicio){
+  AñadirServicio(servicio){
     return axios.post(API_URL+ 'servicios/', servicio,{headers:authHeader()});
   }
 }

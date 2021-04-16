@@ -2,7 +2,7 @@
   <div>
     <!-- Header -->
     <header class="jumbotron">
-      <h1>Clientes</h1>
+      <h1>Servicios</h1>
     </header>
 
     <!-- Añadir -->
@@ -12,7 +12,7 @@
       data-target="#modalAñadir"
       class="añadir btn btn-success float-right"
     >
-      + Añadir Propietario
+      + Añadir Servicio
     </button>
 
     <!-- Filter -->
@@ -33,34 +33,24 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">Nombres</th>
-            <th scope="col">Apellidos</th>
-            <th scope="col">Documento</th>
-            <th scope="col">No. de documento</th>
-            <th scope="col">Género</th>
-            <th scope="col">Acciones</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Precio</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(propietario, i) in filteredRows" :key="i">
+          <tr v-for="(servicio, i) in filteredRows" :key="i">
             <th class="align-middle" scope="row">{{ i+1 }}</th>
-            <td class="align-middle">{{ propietario.nombre }}</td>
-            <td class="align-middle">{{ propietario.apellido }}</td>
+            <td class="align-middle">{{ servicio.nombre }}</td>
+            <td class="align-middle">{{ servicio.descripcion }}</td>
             <td class="align-middle">
-              {{ dict_doc[propietario.tipo_documento] }}
+              {{ dict_tipo[servicio.tipo] }}
             </td>
-            <td class="align-middle">{{ propietario.numero_documento }}</td>
-            <td class="align-middle">{{ dict_genero[propietario.sexo] }}</td>
+            <td class="align-middle">{{ servicio.precio }}</td>
             <td>
               <button
                 type="button"
-                class="btn btn-success botoncito"
-                v-on:click="VerUsuario(i)"
-              >
-                Mascotas
-              </button>
-              <button
-                type="button"
-                v-on:click="EditarUsuario(i)"
+                v-on:click="EditarServicio(i)"
                 data-toggle="modal"
                 data-target="#exampleModal"
                 class="btn btn-info botoncito"
@@ -71,7 +61,7 @@
                 type="button"
                 class="btn btn-danger botoncito"
                 data-toggle="modal"
-                v-on:click="EditarUsuario(i)"
+                v-on:click="EditarServicio(i)"
                 data-target="#eliminarModal"
               >
                 Eliminar
@@ -95,7 +85,7 @@
         <div class="modal-content ">
           <div class="modal-header ">
             <h5 class="modal-title centrado" id="exampleModalLabel">
-              ¿Está seguro de borrar el usuario?
+              ¿Está seguro de borrar el servicio?
             </h5>
             <button
               type="button"
@@ -110,7 +100,7 @@
             <button
               type="button"
               class="btn btn-danger botoncito"
-              v-on:click="EliminarUsuario(selected)"
+              v-on:click="EliminarServicio(selected)"
               data-dismiss="modal"
               aria-label="Close"
             >
@@ -142,7 +132,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">
-              Editar Propietario
+              Editar Servicio
             </h5>
             <button
               type="button"
@@ -169,11 +159,11 @@
             <div class="md-form">
               <i class="fas fa-user prefix grey-text"></i>
               <label data-error="wrong" data-success="right" for="form3"
-                >Apellido</label
+                >Descripción</label
               >
               <input
                 type="text"
-                v-model="selected.apellido"
+                v-model="selected.descripcion"
                 id="form3"
                 class="form-control validate"
               />
@@ -181,45 +171,30 @@
             <div class="md-form">
               <i class="fas fa-user prefix grey-text"></i>
               <label data-error="wrong" data-success="right" for="form3"
-                >Tipo de documento</label
+                >Tipo</label
               >
 
               <select
-                v-model="selected.tipo_documento"
+                v-model="selected.tipo"
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-              <option v-for="(doc, i) in tipos_docs" :key="i" :value=dict_doc[doc] >{{
-                  doc
+              <option v-for="(tipo, i) in ['Procedimiento','Producto']" :key="i" :value="i+1" >{{
+                  tipo
                 }}</option>
               </select>
             </div>
             <div class="md-form ">
               <i class="fas fa-user prefix grey-text"></i>
               <label data-error="wrong" data-success="right" for="form3"
-                >Numero de documento</label
+                >Precio</label
               >
               <input
                 type="text"
-                v-model="selected.numero_documento"
+                v-model="selected.precio"
                 id="form3"
                 class="form-control validate"
               />
-            </div>
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Género</label
-              >
-               <select
-                v-model="selected.sexo"
-                class="form-control form-select-lg mb-3"
-                aria-label=".form-select-lg example"
-              >
-              <option v-for="(genero, i) in tipos_genero" :key="i" :value=dict_genero[genero] >{{
-                  genero
-                }}</option>
-              </select>
             </div>
           </div>
           <div class="modal-footer">
@@ -256,7 +231,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">
-              Añadir Propietario
+              Añadir Servicio
             </h5>
             <button
               type="button"
@@ -283,11 +258,11 @@
             <div class="md-form">
               <i class="fas fa-user prefix grey-text"></i>
               <label data-error="wrong" data-success="right" for="form3"
-                >Apellido</label
+                >descripcion</label
               >
               <input
                 type="text"
-                v-model="nuevo.apellido"
+                v-model="nuevo.descripcion"
                 id="form3"
                 class="form-control validate"
               />
@@ -295,45 +270,30 @@
             <div class="md-form">
               <i class="fas fa-user prefix grey-text"></i>
               <label data-error="wrong" data-success="right" for="form3"
-                >Tipo de documento</label
+                >Tipo</label
               >
 
               <select
-                v-model="nuevo.tipo_documento"
+                v-model="nuevo.tipo"
                 class="form-control form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-              <option v-for="(doc, i) in tipos_docs" :key="i" :value=i+1 >{{
-                  doc
+              <option v-for="(tipo, i) in ['Procedimiento','Producto']" :key="i" :value="i+1" >{{
+                  tipo
                 }}</option>
               </select>
             </div>
             <div class="md-form ">
               <i class="fas fa-user prefix grey-text"></i>
               <label data-error="wrong" data-success="right" for="form3"
-                >Numero de documento</label
+                >Precio</label
               >
               <input
                 type="text"
-                v-model="nuevo.numero_documento"
+                v-model="nuevo.precio"
                 id="form3"
                 class="form-control validate"
               />
-            </div>
-            <div class="md-form">
-              <i class="fas fa-user prefix grey-text"></i>
-              <label data-error="wrong" data-success="right" for="form3"
-                >Género</label
-              > 
-               <select
-                v-model="nuevo.sexo"
-                class="form-control form-select-lg mb-3"
-                aria-label=".form-select-lg example"
-              >
-              <option v-for="(genero, i) in tipos_genero" :key="i" :value=dict_genero[genero] >{{
-                  genero
-                }}</option>
-              </select>
             </div>
           </div>
           <div class="modal-footer">
@@ -346,7 +306,7 @@
             </button>
             <button
               type="button"
-              v-on:click="AñadirPropietario(nuevo)"
+              v-on:click="AñadirServicio(nuevo)"
               data-dismiss="modal"
               class="btn btn-primary"
             >
@@ -361,37 +321,27 @@
 </template>
 
 <script>
-import UserService from "../services/user.service";
-import Propietario from "../models/propietario";
+import ServicioService from "../services/servicio.service";
+import Servicio from "../models/servicio";
 export default {
   name: "User",
   data() {
     return {
-      
-      tipos_genero: ["F","M"],
-      nuevo: new Propietario(),
+      nuevo: new Servicio(),
       go: false,
       filter: "",
       content: "",
-      propietarios: [],
-      dict_genero: { 1: "F", 2: "M" , "F": 1, "M" : 2 },
-      dict_doc: {
-        1: "C.C",
-        2: "T.I",
-        "C.C": 1,
-        "T.I": 2
-      },
-      tipos_docs : ["C.C","T.I"],
-      animales: [],
-      selected: new Propietario(),
+      servicios: [],
+      selected: new Servicio(),
+      dict_tipo : ['Procedimiento','Producto'],
     };
   },
   created() {
-    UserService.getPropietarios().then(
+    ServicioService.getServicios().then(
       (response) => {
         let info = response.data;
         for (var a in info) {
-          this.propietarios.push(info[a]);
+          this.servicios.push(info[a]);
         }
       },
       (error) => {
@@ -400,25 +350,15 @@ export default {
     );
   },
   mounted() {
-    UserService.getUserBoard().then(
-      (response) => {
-        this.content = response.data;
-      },
-      (error) => {
-        this.content =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();
-      }
-    );
+  
   },
   methods: {
-    AñadirPropietario(propietario) {
-      UserService.postPropietario(propietario).then(
+    AñadirServicio(servicio) {
+      ServicioService.AñadirServicio(servicio).then(
         (response) => {
           console.log("Exito añadiendo" + response);
           this.ActualizarTabla();
-          this.nuevo = new Propietario();
+          this.nuevo = new Servicio();
         },
         (error) => {
           this.content =
@@ -428,11 +368,8 @@ export default {
         }
       );
     },
-    Test() {
-      console.log(this.propietarios);
-    },
     PeticionPut() {
-      UserService.editarUsuario(this.selected).then(
+      ServicioService.editarServices(this.selected).then(
         (response) => {
           console.log("Exito editando" + response.data);
 
@@ -447,9 +384,9 @@ export default {
       );
     },
     ActualizarTabla() {
-      UserService.getPropietarios().then(
+      ServicioService.getServicios().then(
         (response) => {
-          this.propietarios = response.data;
+          this.servicios = response.data;
           console.log(response.data)
         },
         (error) => {
@@ -457,28 +394,8 @@ export default {
         }
       );
     },
-    VerUsuario(i) {
-      localStorage.removeItem('propietario')
-      UserService.getAnimales(this.propietarios[i].id).then(
-        (response) => {
-          localStorage.setItem(
-            'propietario',
-            JSON.stringify(this.propietarios[i])
-          );
-          this.animales = response.data;
-          this.$router.push("/mascotas");
-        },
-        (error) => {
-          this.content =
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString();
-        }
-      );
-      
-    },
-    EliminarUsuario(propietario) {
-      UserService.deleteUsuario(propietario.id).then(
+    EliminarServicio(servicio) {
+      ServicioService.deleteServicio(servicio.id).then(
         (response) => {
           console.log(response);
           this.ActualizarTabla();
@@ -491,26 +408,20 @@ export default {
         }
       );
     },
-    EditarUsuario(i) {
+    EditarServicio(i) {
       //this.selected = this.propietarios[i];
       // asignación sin bindear
-      this.selected = Object.assign({}, this.propietarios[i]);
+      this.selected = Object.assign({}, this.servicios[i]);
     },
   },
   computed: {
     filteredRows() {
-      return this.propietarios.filter((propietario) => {
-        const nombre = propietario.nombre.toString().toLowerCase();
-        const apellido = propietario.apellido.toString().toLowerCase();
-        const numerodocumento = propietario.numero_documento
-          .toString()
-          .toLowerCase();
+      return this.servicios.filter((servicio) => {
+        const nombre = servicio.nombre.toString().toLowerCase();
         const searchTerm = this.filter.toString().toLowerCase();
 
         return (
-          nombre.includes(searchTerm) ||
-          apellido.includes(searchTerm) ||
-          numerodocumento.includes(searchTerm)
+          nombre.includes(searchTerm)
         );
       });
     },

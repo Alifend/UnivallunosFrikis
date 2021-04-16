@@ -56,15 +56,6 @@
               >
                 Detalles
               </button>
-              <button
-                type="button"
-                class="btn btn-danger botoncito"
-                v-on:click="EditarDetalles(factura)"
-                data-toggle="modal"
-                data-target="#eliminarModal"
-              >
-                Eliminar
-              </button>
             </td>
           </tr>
         </tbody>
@@ -100,6 +91,62 @@
           </div>
           <div class="modal-body">
             <div class="container">
+              <div class="row">
+                <div class="col-3">
+                  <label data-error="wrong" data-success="right" for="form3"
+                    >Nombre:
+                  </label>
+                  <input
+                    type="text"
+                    id="form3"
+                    class="form-control validate"
+                    v-model="selected.nombre"
+                    readonly
+                  />
+                </div>
+                <div class="col-3">
+                  <label data-error="wrong" data-success="right" for="form3"
+                    >Dirección:
+                  </label>
+                  <input
+                    type="text"
+                    id="form3"
+                    class="form-control validate"
+                    v-model="selected.direccion"
+                    readonly
+                  />
+                </div>
+                <div class="col-2">
+                  <label data-error="wrong" data-success="right" for="form3"
+                    >Tipo de documento:
+                  </label>
+                  <select
+                    v-model="selected.tipo_documento"
+                    class="form-control form-select-lg mb-3"
+                    aria-label=".form-select-lg example"
+                    readonly
+                  >
+                    <option
+                      v-for="(tipo, i) in ['C.C', 'T.I']"
+                      :key="i"
+                      :value="i + 1"
+                      >{{ tipo }}</option
+                    >
+                  </select>
+                </div>
+                <div class="col-2">
+                  <label data-error="wrong" data-success="right" for="form3"
+                    >Documento:
+                  </label>
+                  <input
+                    type="text"
+                    id="form3"
+                    class="form-control validate"
+                    v-model="selected.numero_documento"
+                    readonly
+                  />
+                </div>
+              </div>
               <table class="table text-center">
                 <thead>
                   <tr>
@@ -805,6 +852,7 @@ export default {
             this.detalles.push(response.data[i]);
           }
           this.GuardarServicios();
+          this.EditarDetalles(factura);
         },
         (error) => {
           this.content =
