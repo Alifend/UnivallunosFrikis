@@ -683,6 +683,9 @@ export default {
     };
   },
   created() {
+    if ( this.showCajeroBoard == false  && this.showAdminBoard == false) {
+      this.goProfile();
+    }
     this.ResetearTemp();
     this.facturas = [];
     FacturaService.getFacturas().then(
@@ -699,6 +702,9 @@ export default {
     );
   },
   methods: {
+    goProfile() {
+      this.$router.push("/profile");
+    },
     Actualizar() {
       this.facturas = [];
       FacturaService.getFacturas().then(
@@ -917,6 +923,21 @@ export default {
     },
   },
   computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 1;
+      }
+      return false;
+    },
+    showCajeroBoard() {
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 3;
+      }
+      return false;
+    },
     filteredRows() {
       return this.facturas.filter((factura) => {
         const nombre = factura.fecha_emision.toString().toLowerCase();

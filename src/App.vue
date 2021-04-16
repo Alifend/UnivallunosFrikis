@@ -126,21 +126,11 @@ export default {
       return false;
     },
   },
-  watch: {
-    showModeratorBoard: function(val) {
-      if (val == false) {
-        this.goProfile();
-      }
-    },
-  },
   methods: {
     logOut() {
-      this.$store.dispatch("auth/logout");
       this.$router.push("/login");
+      this.$store.dispatch("auth/logout");
     },
-    goProfile(){
-      this.$router.push("/profile");
-    }
   },
 };
 </script>

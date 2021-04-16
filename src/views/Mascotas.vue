@@ -550,6 +550,9 @@ export default {
     };
   },
   created() {
+    if ( this.showVeterinarioBoard == false  && this.showAdminBoard == false) {
+      this.goProfile();
+    }
     this.mascotas = [];
     let prop = JSON.parse(localStorage.getItem("propietario"));
     MascotaService.getMascotas(prop.id).then(
@@ -566,6 +569,9 @@ export default {
     );
   },
   methods: {
+    goProfile() {
+      this.$router.push("/profile");
+    },
     AñadirMascota() {
       MascotaService.createMascota(this.selected).then(
         (response) => {
@@ -781,6 +787,21 @@ export default {
     },
   },
   computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 1;
+      }
+      return false;
+    },
+    showVeterinarioBoard() {
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 2;
+      }
+      return false;
+    },
     filteredRows() {
       return this.mascotas.filter((mascota) => {
         const nombre = mascota.nombre.toString().toLowerCase();

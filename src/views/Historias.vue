@@ -1,8 +1,6 @@
 <template>
   <div>
-
-
-        <!-- Añadir -->
+    <!-- Añadir -->
     <button
       type="button"
       data-toggle="modal"
@@ -13,7 +11,7 @@
       + Añadir Historia Clinica
     </button>
 
-      <!-- Modal Crear -->
+    <!-- Modal Crear -->
     <div
       class="modal fade bd-example-modal-lg"
       tabindex="-1"
@@ -85,9 +83,8 @@
             </button>
           </div>
         </div>
-      </div> 
+      </div>
     </div>
-
 
     <!-- Table -->
     <div class="container">
@@ -101,8 +98,8 @@
         </thead>
         <tbody>
           <tr v-for="(hist, i) in historias" :key="i">
-            <th scope="row">{{ i+1 }}</th>
-            <td>{{ hist.fecha_emision | formatDate}}</td>
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ hist.fecha_emision | formatDate }}</td>
             <td>
               <button
                 type="button"
@@ -140,7 +137,7 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" >
+            <h5 class="modal-title">
               Detalle
             </h5>
             <button
@@ -200,7 +197,7 @@
             </button>
           </div>
         </div>
-      </div> 
+      </div>
     </div>
 
     <!-- Modal Confirmación -->
@@ -301,18 +298,21 @@
 
 <script>
 import HistoriaService from "../services/historia.service";
-import Historia from '../models/historia'
+import Historia from "../models/historia";
 
 export default {
   data() {
     return {
       historias: [],
       selected: "",
-      nuevo : new Historia()
+      nuevo: new Historia(),
     };
   },
 
   created() {
+    if ( this.showVeterinarioBoard == false  && this.showAdminBoard == false) {
+      this.goProfile();
+    }
     this.historias = [];
     let masc = JSON.parse(localStorage.getItem("mascota"));
     HistoriaService.getHistorias(masc.id).then(
@@ -329,9 +329,12 @@ export default {
   },
 
   methods: {
-    AgregarHistoria(historia){
-      let id = JSON.parse(localStorage.getItem('mascota')).id
-      historia.historia_clinica = id
+    goProfile() {
+      this.$router.push("/profile");
+    },
+    AgregarHistoria(historia) {
+      let id = JSON.parse(localStorage.getItem("mascota")).id;
+      historia.historia_clinica = id;
       HistoriaService.postHistoria(historia).then(
         (response) => {
           console.log(response);
@@ -345,7 +348,7 @@ export default {
         }
       );
     },
-    SetearNuevo(){
+    SetearNuevo() {
       this.nuevo = new Historia();
     },
     VerDetalle(i) {
@@ -396,6 +399,24 @@ export default {
     },
     SetearSelected(i) {
       this.selected = Object.assign({}, this.historias[i]);
+    },
+  },
+
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 1;
+      }
+      return false;
+    },
+    showVeterinarioBoard() {
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 2;
+      }
+      return false;
     },
   },
 };

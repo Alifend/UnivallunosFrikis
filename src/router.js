@@ -39,12 +39,6 @@ export const router = new Router({
       component: () => import('./views/Veterinario.vue')
     },
     {
-      path: '/user',
-      name: 'user',
-      // lazy-loaded
-      component: () => import('./views/BoardUser.vue')
-    },
-    {
       path: '/mascotas',
       name: 'mascotas',
       // lazy-loaded

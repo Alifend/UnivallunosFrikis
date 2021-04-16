@@ -337,6 +337,9 @@ export default {
     };
   },
   created() {
+    if (this.showAdminBoard == false) {
+      this.goProfile();
+    }
     ServicioService.getServicios().then(
       (response) => {
         let info = response.data;
@@ -353,6 +356,9 @@ export default {
   
   },
   methods: {
+    goProfile() {
+      this.$router.push("/profile");
+    },
     AñadirServicio(servicio) {
       ServicioService.AñadirServicio(servicio).then(
         (response) => {
@@ -415,6 +421,15 @@ export default {
     },
   },
   computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 1;
+      }
+      return false;
+    },
     filteredRows() {
       return this.servicios.filter((servicio) => {
         const nombre = servicio.nombre.toString().toLowerCase();

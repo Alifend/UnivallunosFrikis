@@ -387,6 +387,9 @@ export default {
     };
   },
   created() {
+    if ( this.showVeterinarioBoard == false  && this.showAdminBoard == false) {
+      this.goProfile();
+    }
     UserService.getPropietarios().then(
       (response) => {
         let info = response.data;
@@ -413,6 +416,9 @@ export default {
     );
   },
   methods: {
+    goProfile() {
+      this.$router.push("/profile");
+    },
     AñadirPropietario(propietario) {
       UserService.postPropietario(propietario).then(
         (response) => {
@@ -498,6 +504,21 @@ export default {
     },
   },
   computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 1;
+      }
+      return false;
+    },
+    showVeterinarioBoard() {
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 2;
+      }
+      return false;
+    },
     filteredRows() {
       return this.propietarios.filter((propietario) => {
         const nombre = propietario.nombre.toString().toLowerCase();
