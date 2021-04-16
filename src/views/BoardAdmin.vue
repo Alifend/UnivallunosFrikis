@@ -454,6 +454,9 @@ export default {
     };
   },
   created() {
+    if (this.showAdminBoard == false){
+      this.goProfile()
+    }
     UsuarioService.getUsuarios().then(
       (response) => {
         let info = response.data;
@@ -549,15 +552,28 @@ export default {
       // asignación sin bindear
       this.selected = Object.assign({}, this.usuarios[i]);
     },
+
+    goProfile() {
+      this.$router.push("/profile");
+    },
+  },
+
+  watch: {
+    showAdminBoard: function(val) {
+      if (val == false) {
+        this.goProfile();
+      }
+    },
   },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
     },
-    getOutofHere() {
-      if (this.currentUser.perfil != 1) {
-        this.$router.push("/profile");
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser.perfil) {
+        return this.currentUser.perfil == 1;
       }
+
       return false;
     },
     filteredRows() {

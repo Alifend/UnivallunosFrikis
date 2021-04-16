@@ -35,11 +35,7 @@
             <font-awesome-icon icon="file-invoice-dollar" /> Facturas
           </router-link>
         </li>
-        <li v-if="showCajeroBoard" class="nav-item">
-          <router-link to="/servicio" class="nav-link">
-            <font-awesome-icon icon="shopping-cart" /> Servicios
-          </router-link>
-        </li>
+
       </div>
 
       <div v-if="!currentUser" class="navbar-nav ml-auto">
@@ -132,8 +128,8 @@ export default {
   },
   watch: {
     showModeratorBoard: function(val) {
-      if (val == 2) {
-        this.goVet();
+      if (val == false) {
+        this.goProfile();
       }
     },
   },
@@ -142,6 +138,9 @@ export default {
       this.$store.dispatch("auth/logout");
       this.$router.push("/login");
     },
+    goProfile(){
+      this.$router.push("/profile");
+    }
   },
 };
 </script>
