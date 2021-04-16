@@ -19,10 +19,11 @@ import {
   faUsersCog,
   faAddressCard,
   faPortrait,
-  faFileInvoiceDollar
+  faFileInvoiceDollar,
+  faShoppingCart
 } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt,faUsersCog,faAddressCard,faPortrait,faFileInvoiceDollar);
+library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt,faUsersCog,faAddressCard,faPortrait,faFileInvoiceDollar,faShoppingCart);
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.config.productionTip = false;
 Vue.filter('formatDate', function(value) {
