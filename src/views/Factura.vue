@@ -1,5 +1,10 @@
 <template>
   <div>
+
+
+
+
+    
     <!-- Header -->
     <header class="jumbotron">
       <h1>Facturas</h1>
@@ -29,7 +34,7 @@
     </div>
 
     <!-- Table -->
-    <div class="container">
+    <div class="container" >
       <table class="table text-center">
         <thead>
           <tr>
@@ -56,6 +61,13 @@
               >
                 Detalles
               </button>
+              <button
+                type="button"
+                class="btn btn-info botoncito"
+                v-on:click="GenerarReporte(factura)"
+              >
+                Generar PDF
+              </button>
             </td>
           </tr>
         </tbody>
@@ -74,8 +86,9 @@
       <div
         class="modal-dialog modal-xl modal-dialog-scrollable "
         role="document"
+        
       >
-        <div class="modal-content">
+        <div class="modal-content " >
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">
               Crear Factura
@@ -90,7 +103,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="container">
+            <div class="container" >
               <div class="row">
                 <div class="col-3">
                   <label data-error="wrong" data-success="right" for="form3"
@@ -508,7 +521,7 @@
       aria-hidden="true"
     >
       <div class="modal-dialog modal-dialog-centered  " role="document">
-        <div class="modal-content ">
+        <div class="modal-content " >
           <div class="modal-header ">
             <h5 class="modal-title centrado" id="exampleModalLabel">
               ¿Está seguro de borrar la factura?
@@ -659,10 +672,13 @@
 <script>
 import FacturaService from "../services/factura.service";
 import Factura from "../models/factura";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 export default {
   name: "Mascota",
   data() {
     return {
+
       tipos: ["Procedimiento", "Producto"],
       cliente: {},
       detalles_temporales: [],
@@ -703,6 +719,36 @@ export default {
     );
   },
   methods: {
+    GenerarReporte(factura){
+        let detalles = [];
+      let doc = new jsPDF();
+      let espaciado = 1;
+      FacturaService.getDetalles(factura.id).then(
+        (response) => {
+          console.log(response.data, "Estos son los detalles");
+          for (let i = 0; i < response.data.length; i++) {
+            detalles.push([response.data[i].servicio.nombre,
+            response.data[i].servicio.precio,response.data[i].cantidad]);
+          }
+          espaciado = (6 * response.data.length+1) + 48;
+          doc.text("Factura Acme-inc     Comprador : "+factura.nombre+"  Dirección  : "+factura.direccion, 14, 25) 
+          doc.autoTable({
+            head: [['Servicio','Precio','Cantidad']],
+            body : detalles,
+            startY: 30,
+          })
+          doc.text("Total :"+factura.total, 14, espaciado)
+          doc.save('Factura.pdf');
+        },
+        (error) => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+
+    },
     goProfile() {
       this.$router.push("/profile");
     },

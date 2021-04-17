@@ -44,7 +44,7 @@
             <td class="align-middle">{{ servicio.nombre }}</td>
             <td class="align-middle">{{ servicio.descripcion }}</td>
             <td class="align-middle">
-              {{ dict_tipo[servicio.tipo] }}
+              {{ dict_tipo[servicio.tipo-1] }}
             </td>
             <td class="align-middle">{{ servicio.precio }}</td>
             <td>
