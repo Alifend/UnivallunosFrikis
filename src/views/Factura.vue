@@ -353,6 +353,9 @@
                         v-model="temp.servicio"
                         class="form-control form-select-lg mb-3"
                         aria-label=".form-select-lg example"
+                        onfocus='this.size=5'
+                        onblur='this.size=1;' 
+                        onchange='this.size=1; this.blur();'
                       >
                         <option
                           v-for="(servicio, i) in servicios"
@@ -678,7 +681,7 @@ export default {
   name: "Mascota",
   data() {
     return {
-
+      dict : ['C.C','T.I'],
       tipos: ["Procedimiento", "Producto"],
       cliente: {},
       detalles_temporales: [],
@@ -720,7 +723,7 @@ export default {
   },
   methods: {
     GenerarReporte(factura){
-        let detalles = [];
+      let detalles = [];
       let doc = new jsPDF();
       let espaciado = 1;
       FacturaService.getDetalles(factura.id).then(
@@ -730,12 +733,12 @@ export default {
             detalles.push([response.data[i].servicio.nombre,
             response.data[i].servicio.precio,response.data[i].cantidad]);
           }
-          espaciado = (6 * response.data.length+1) + 48;
-          doc.text("Factura Acme-inc     Comprador : "+factura.nombre+"  Dirección  : "+factura.direccion, 14, 25) 
+          espaciado = (6 * response.data.length+1) + 75;
+          doc.text("                         Factura Acme-inc\n\nComprador: "+factura.nombre+"              Dirección: "+factura.direccion+"\nTipo: "+this.dict[factura.tipo_documento-1]+"                              Documento  :  "+factura.numero_documento, 14, 25) 
           doc.autoTable({
             head: [['Servicio','Precio','Cantidad']],
             body : detalles,
-            startY: 30,
+            startY: 50,
           })
           doc.text("Total :"+factura.total, 14, espaciado)
           doc.save('Factura.pdf');
