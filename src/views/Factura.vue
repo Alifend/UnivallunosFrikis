@@ -420,7 +420,7 @@
                     </td>
                   </tr>
                   <tr v-for="(nuevo, i) in nuevos" :key="i">
-                    <th scope="row">{{ i }}</th>
+                    <th scope="row">{{ i+1 }}</th>
                     <td>
                       <select
                         v-model="nuevo.servicio"
